@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ROLE>server</ROLE>
+<SERVER>
+	<CLIENT IP="39.101.140.145" PORT="5105" />
+	<CLIENT IP="39.101.140.145" PORT="5100" />
+</SERVER>
