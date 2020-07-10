@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dds>
+	<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+		<transport_descriptors>
+			<transport_descriptor>
+				<transport_id>serclipub_transport</transport_id>
+				<type>TCPv4</type>
+				<sendBufferSize>12582912</sendBufferSize>
+				<receiveBufferSize>12582912</receiveBufferSize>
+				<listening_ports>
+					<port>5100</port>
+				</listening_ports>
+				<wan_addr>39.101.140.145</wan_addr>
+			</transport_descriptor>
+			<transport_descriptor>
+				<transport_id>clisub_transport</transport_id>
+				<type>TCPv4</type>
+			</transport_descriptor>
+		</transport_descriptors>
+
+		<participant profile_name="serclipub_participant">
+			<rtps>
+				<userTransports>
+					<transport_id>serclipub_transport</transport_id>
+				</userTransports>
+				<useBuiltinTransports>false</useBuiltinTransports>
+			</rtps>
+		</participant>	
+		<participant profile_name="clisub_participant">
+			<rtps>
+				<userTransports>
+					<transport_id>clisub_transport</transport_id>
+				</userTransports>
+				<useBuiltinTransports>false</useBuiltinTransports>
+				<builtin>
+					<initialPeersList>
+						<locator>
+							<tcpv4>
+								<address>39.101.140.145</address>
+								<physical_port>5100</physical_port>
+							</tcpv4>
+						</locator>
+					</initialPeersList>
+				</builtin>
+			</rtps>
+		</participant>
+		<data_writer profile_name="serclipub_datawriter">
+		<topic>
+                <kind>WITH_KEY</kind>
+                <name>SerCli0</name>
+		<dataType>SerCli</dataType>
+</topic>
+		</data_writer>
+<data_reader profile_name="clisub0_datareader">
+	<topic>
+                <kind>WITH_KEY</kind>
+                <name>SerCli0</name>
+		<dataType>SerCli</dataType>
+</topic>
+</data_reader>
+</profiles>
+</dds>

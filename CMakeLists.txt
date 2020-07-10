@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.12.4)
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
+SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
 if(NOT CMAKE_VERSION VERSION_LESS 3.0)
     cmake_policy(SET CMP0048 NEW)
@@ -30,6 +33,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
     endif()
 endif()
 message(STATUS "Configuring HelloWorld publisher/subscriber example...")
-file(GLOB DDS_HELLOWORLD_SOURCES_CXX "src/*.cxx")
-add_executable(bundle src/main.cpp ${DDS_HELLOWORLD_SOURCES_CXX})
+file(GLOB SOURCES_CXX "src/*.cxx")
+file(GLOB SOURCES_CPP "src/*.cpp")
+add_executable(bundle src/main.cpp ${SOURCES_CXX} ${SOURCES_CPP})
 target_link_libraries(bundle fastrtps fastcdr)

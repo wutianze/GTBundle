@@ -1,0 +1,3 @@
+GTPATH=`pwd`
+export GTPATH
+echo GTPATH:$GTPATH
