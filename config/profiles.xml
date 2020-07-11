@@ -5,8 +5,6 @@
 			<transport_descriptor>
 				<transport_id>serclipub_transport</transport_id>
 				<type>TCPv4</type>
-				<sendBufferSize>12582912</sendBufferSize>
-				<receiveBufferSize>12582912</receiveBufferSize>
 				<listening_ports>
 					<port>5100</port>
 				</listening_ports>
@@ -16,20 +14,40 @@
 				<transport_id>clisub_transport</transport_id>
 				<type>TCPv4</type>
 			</transport_descriptor>
+<transport_descriptor>
+	<transport_id>default_transport</transport_id>
+	<type>UDPv4</type>
+		</transport_descriptor>
 		</transport_descriptors>
 
 		<participant profile_name="serclipub_participant">
-		<domainId>0</domainId>
-	<rtps>
-		<name>DomainParticipant Name</name>
-	</rtps>
+			<rtps>
+				<userTransports>
+					<transport_id>serclipub_transport</transport_id>
+					<transport_id>default_transport</transport_id>
+				</userTransports>
+				<useBuiltinTransports>false</useBuiltinTransports>
+			</rtps>
 		</participant>	
 		<participant profile_name="clisub_participant">
-		<domainId>0</domainId>
-	<rtps>
-		<name>DomainParticipant Name2</name>
-	</rtps>
-	</participant>
+			<rtps>
+				<userTransports>
+					<transport_id>clisub_transport</transport_id>
+					<transport_id>default_transport</transport_id>
+				</userTransports>
+				<useBuiltinTransports>false</useBuiltinTransports>
+				<builtin>
+					<initialPeersList>
+						<locator>
+							<tcpv4>
+								<address>39.101.140.145</address>
+								<physical_port>5100</physical_port>
+							</tcpv4>
+						</locator>
+					</initialPeersList>
+				</builtin>
+			</rtps>
+		</participant>
 		<data_writer profile_name="serclipub_datawriter">
 		<topic>
                 <kind>WITH_KEY</kind>
