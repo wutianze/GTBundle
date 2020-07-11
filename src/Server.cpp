@@ -140,6 +140,7 @@ while(i<test_send){
         while(serclipub_listener_.matched_ > 0){
 		message_.seq(i);
 		i++;
+		if(i>=test_send)break;
 writer_->write(&message_);
 		cout<<"publish one"<<endl;
 }
