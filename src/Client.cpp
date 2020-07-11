@@ -6,10 +6,12 @@ class CliSubReaderListener : public DataReaderListener
 {
 
 public:
-
+    SerCli message_;
+    atomic_int samples_;
     CliSubReaderListener()
     : DataReaderListener()
     {
+	    samples_=0;
     }
 
     virtual ~CliSubReaderListener()
@@ -19,8 +21,18 @@ public:
     virtual void on_data_available(
             DataReader* reader)
     {
-        (void)reader;
-        std::cout << "Received new data message" << std::endl;
+        SampleInfo info;
+            if (reader->take_next_sample(&message_, &info) == ReturnCode_t::RETCODE_OK)
+            {
+		    //auto rec_time = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch()).count();
+		    if (info.instance_state == ALIVE)
+                {
+                    samples_++;
+                    std::cout << " with seq: " << message_.seq()
+                                << " samples:" <<samples_<<std::endl;
+		
+		}
+            }
     }
 
     virtual void on_subscription_matched(
@@ -124,7 +136,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         type_.register_type(participant_);
 
         // Create the subscriptions Topic
-        topic_ = participant_->create_topic("Cli0", type_.get_type_name() , TOPIC_QOS_DEFAULT);
+        topic_ = participant_->create_topic("SerCli0", type_.get_type_name() , TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -275,7 +287,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         }
 
         // Create the DataReader
-        writer_ = publisher_->create_datawriter_with_profile(topic_, "clipub_datawriter", &clipub_listener_);
+        writer_ = publisher_->create_datawriter_with_profile(topic_, "clipub0_datawriter", &clipub_listener_);
 
         if (writer_ == nullptr)
         {

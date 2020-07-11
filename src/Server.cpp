@@ -120,7 +120,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         }
 
         // Create the DataReader
-        writer_ = publisher_->create_datawriter_with_profile(topic_, "serclipub_datawriter", &serclipub_listener_);
+        writer_ = publisher_->create_datawriter_with_profile(topic_, "serclipub0_datawriter", &serclipub_listener_);
 
         if (writer_ == nullptr)
         {
@@ -134,15 +134,17 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
 void SerCliPub::run(){
 #ifdef TEST
 	cout<<"SerCliPub run"<<endl;
-	uint32_t test_send = 5;
+	uint32_t test_send = 50;
 	uint64_t i = 0;
+	message_.seq(0);
 while(i<test_send){	
         while(serclipub_listener_.matched_ > 0){
-		message_.seq(i);
+		message_.seq(message_.seq()+1);
 		i++;
 		if(i>=test_send)break;
+		cout<<"publish seq:"<<message_.seq()<<endl;
 writer_->write(&message_);
-		cout<<"publish one"<<endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
@@ -422,7 +424,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         }
 
         // Create the DataReader
-        writer_ = publisher_->create_datawriter_with_profile(topic_, "serconpub_datawriter", &serclipub_listener_);
+        writer_ = publisher_->create_datawriter_with_profile(topic_, "serconpub0_datawriter", &serclipub_listener_);
 
         if (writer_ == nullptr)
         {

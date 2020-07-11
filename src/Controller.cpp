@@ -275,7 +275,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         }
 
         // Create the DataReader
-        writer_ = publisher_->create_datawriter_with_profile(topic_, "conpub_datawriter", &conpub_listener_);
+        writer_ = publisher_->create_datawriter_with_profile(topic_, "conpub0_datawriter", &conpub_listener_);
 
         if (writer_ == nullptr)
         {

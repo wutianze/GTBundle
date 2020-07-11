@@ -26,6 +26,14 @@
 				</listening_ports>
 				<wan_addr>152.136.134.100</wan_addr>
 			</transport_descriptor>
+			<transport_descriptor>
+				<transport_id>serconpub_transport</transport_id>
+				<type>TCPv4</type>
+				<listening_ports>
+					<port>5100</port>
+				</listening_ports>
+				<wan_addr>152.136.134.100</wan_addr>
+			</transport_descriptor>
 
 			<transport_descriptor>
 				<transport_id>clisub_transport</transport_id>
@@ -37,6 +45,10 @@
 			</transport_descriptor>
 			<transport_descriptor>
 				<transport_id>consub_transport</transport_id>
+				<type>TCPv4</type>
+			</transport_descriptor>
+			<transport_descriptor>
+				<transport_id>consersub_transport</transport_id>
 				<type>TCPv4</type>
 			</transport_descriptor>
 			<transport_descriptor>
@@ -183,7 +195,7 @@
 			</rtps>
 		</participant>
 
-		<data_writer profile_name="serclipub_datawriter">
+		<data_writer profile_name="serclipub0_datawriter">
 			<topic>
 				<kind>WITH_KEY</kind>
 				<name>SerCli0</name>
@@ -198,7 +210,7 @@
 			</topic>
 		</data_reader>
 
-		<data_writer profile_name="clipub_datawriter">
+		<data_writer profile_name="clipub0_datawriter">
 			<topic>
 				<kind>WITH_KEY</kind>
 				<name>CliSer0</name>
@@ -213,7 +225,7 @@
 			</topic>
 		</data_reader>
 
-		<data_writer profile_name="conpub_datawriter">
+		<data_writer profile_name="conpub0_datawriter">
 			<topic>
 				<kind>WITH_KEY</kind>
 				<name>ConSer0</name>
@@ -227,19 +239,18 @@
 				<dataType>ConSer</dataType>
 			</topic>
 		</data_reader>
-		
-		<data_writer profile_name="conpub_datawriter">
+		<data_writer profile_name="serconpub0_datawriter">
 			<topic>
 				<kind>WITH_KEY</kind>
-				<name>ConSer0</name>
-				<dataType>ConSer</dataType>
+				<name>SerCon0</name>
+				<dataType>SerCon</dataType>
 			</topic>
 		</data_writer>
-		<data_reader profile_name="consersub0_datareader">
+		<data_reader profile_name="consub0_datareader">
 			<topic>
 				<kind>WITH_KEY</kind>
-				<name>ConSer0</name>
-				<dataType>ConSer</dataType>
+				<name>SerCon0</name>
+				<dataType>SerCon</dataType>
 			</topic>
 		</data_reader>
 	</profiles>
