@@ -32,7 +32,7 @@ cout<<"CLIENT1"<<clientElement->FirstAttribute()->Next()->Value()<<endl;
 string roleS(roleElement->GetText());
 if(roleS == "server"){
 	cout<<"server run"<<endl;
-	shared_ptr<SerCliPub> server(new SerCliPub());
+	shared_ptr<CliSerSub> server(new CliSerSub());
 	if(!server->init()){
 	cout<<"server init wrong"<<endl;
 	return -1;
@@ -40,7 +40,7 @@ if(roleS == "server"){
 	server->run();
 }else{
 	cout<<"client run"<<endl;
-	shared_ptr<CliSub> client(new CliSub());
+	shared_ptr<CliPub> client(new CliPub());
 	if(!client->init()){
 	cout<<"client init wrong"<<endl;
 	return -1;

@@ -1,18 +1,18 @@
-#include "Client.h"
+#include "Controller.h"
 #include <cstdlib>
 #define TEST
-//------------------CliSub------------------------
-class CliSubReaderListener : public DataReaderListener
+//------------------ConSub------------------------
+class ConSubReaderListener : public DataReaderListener
 {
 
 public:
 
-    CliSubReaderListener()
+    ConSubReaderListener()
     : DataReaderListener()
     {
     }
 
-    virtual ~CliSubReaderListener()
+    virtual ~ConSubReaderListener()
     {
     }
 
@@ -84,18 +84,18 @@ public:
         (void)reader, (void)info;
         std::cout << "A data sample was lost and will not be received" << std::endl;
     }
-}clisub_listener_;
+}consub_listener_;
 
-CliSub::CliSub()
+ConSub::ConSub()
         : participant_(nullptr)
         , subscriber_(nullptr)
         , topic_(nullptr)
         , reader_(nullptr)
-        , type_(new SerCliPubSubType())
+        , type_(new SerConPubSubType())
     {
 	    mainPath_ = string(getenv("GTPATH"));
     };
-CliSub::~CliSub(){
+ConSub::~ConSub(){
 	if (reader_ != nullptr)
         {
             subscriber_->delete_datareader(reader_);
@@ -111,9 +111,9 @@ CliSub::~CliSub(){
         DomainParticipantFactory::get_instance()->delete_participant(participant_);
 
 }
-bool CliSub::init(){
+bool ConSub::init(){
 DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/config/profiles.xml"); 
-	participant_ = DomainParticipantFactory::get_instance()->create_participant_with_profile(0, "clisub_participant");
+	participant_ = DomainParticipantFactory::get_instance()->create_participant_with_profile(0, "consub_participant");
 
         if (participant_ == nullptr)
         {
@@ -124,7 +124,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         type_.register_type(participant_);
 
         // Create the subscriptions Topic
-        topic_ = participant_->create_topic("Cli0", type_.get_type_name() , TOPIC_QOS_DEFAULT);
+        topic_ = participant_->create_topic("Con0", type_.get_type_name() , TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -140,7 +140,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         }
 
         // Create the DataReader
-        reader_ = subscriber_->create_datareader_with_profile(topic_, "clisub0_datareader", &clisub_listener_);
+        reader_ = subscriber_->create_datareader_with_profile(topic_, "consub0_datareader", &consub_listener_);
 
         if (reader_ == nullptr)
         {
@@ -150,23 +150,23 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         return true;
 
 }
-void CliSub::run(){
+void ConSub::run(){
 while(true)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 }
-//---------------CliPub-----------------
-class CliWriterListener : public DataWriterListener
+//---------------ConPub-----------------
+class ConWriterListener : public DataWriterListener
 {
 public:
 std::atomic_int matched_;
-    CliWriterListener()
+    ConWriterListener()
     : DataWriterListener()
     {
     }
 
-    virtual ~CliWriterListener()
+    virtual ~ConWriterListener()
     {
     }
 
@@ -212,21 +212,21 @@ std::atomic_int matched_;
         (void)writer, (void)status;
         std::cout << "Liveliness lost. Matched Subscribers will consider us offline" << std::endl;
     }
-}clipub_listener_;
+}conpub_listener_;
 
 
-CliPub::CliPub()
+ConPub::ConPub()
 : participant_(nullptr)
         , publisher_(nullptr)
         , topic_(nullptr)
         , writer_(nullptr)
-        , type_(new CliSerPubSubType())
+        , type_(new ConSerPubSubType())
 {
-	cout<<"new CliPub"<<endl;
+	cout<<"new ConPub"<<endl;
 mainPath_ = string(getenv("GTPATH"));
 }
 
-CliPub::~CliPub()
+ConPub::~ConPub()
     {
         if (writer_ != nullptr)
         {
@@ -242,10 +242,10 @@ CliPub::~CliPub()
         }
         DomainParticipantFactory::get_instance()->delete_participant(participant_);
     }
-bool CliPub::init(){
-	cout<<"CliPub init"<<endl;
+bool ConPub::init(){
+	cout<<"ConPub init"<<endl;
 DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/config/profiles.xml"); 
-	participant_ = DomainParticipantFactory::get_instance()->create_participant_with_profile(0, "clipub_participant");
+	participant_ = DomainParticipantFactory::get_instance()->create_participant_with_profile(0, "conpub_participant");
 
         if (participant_ == nullptr)
         {
@@ -257,7 +257,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         type_.register_type(participant_);
 
         // Create the subscriptions Topic
-        topic_ = participant_->create_topic("CliSer0", type_.get_type_name() , TOPIC_QOS_DEFAULT);
+        topic_ = participant_->create_topic("ConSer0", type_.get_type_name() , TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -275,7 +275,7 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
         }
 
         // Create the DataReader
-        writer_ = publisher_->create_datawriter_with_profile(topic_, "clipub_datawriter", &clipub_listener_);
+        writer_ = publisher_->create_datawriter_with_profile(topic_, "conpub_datawriter", &conpub_listener_);
 
         if (writer_ == nullptr)
         {
@@ -286,13 +286,13 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
 
         return true;
 }
-void CliPub::run(){
+void ConPub::run(){
 #ifdef TEST
-	cout<<"CliPub run"<<endl;
+	cout<<"ConPub run"<<endl;
 	uint32_t test_send = 5;
 	uint64_t i = 0;
 while(i<test_send){	
-        while(clipub_listener_.matched_ > 0){
+        while(conpub_listener_.matched_ > 0){
 		message_.seq(i);
 		i++;
 		if(i>=test_send)break;

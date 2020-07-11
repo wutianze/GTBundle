@@ -1,0 +1,5 @@
+struct SerCon
+{
+    uint64 seq;
+    string com;
+};

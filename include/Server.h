@@ -1,4 +1,7 @@
 #include "SerCliPubSubTypes.h"
+#include "CliSerPubSubTypes.h"
+#include "SerConPubSubTypes.h"
+#include "ConSerPubSubTypes.h"
 
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
 #include <fastdds/dds/domain/DomainParticipant.hpp>
@@ -46,4 +49,91 @@ private:
     
     //!Run the Subscriber
     void run();	    
+};
+class CliSerSub
+{
+private:
+    
+    DomainParticipant* participant_;
+
+    Subscriber* subscriber_;
+
+    DataReader* reader_;
+
+    Topic* topic_;
+
+    TypeSupport type_;
+
+    string mainPath_;
+    
+    public:
+
+    CliSerSub();
+
+    ~CliSerSub();
+        
+    //!Initialize the subscriber
+    bool init();
+    
+    //!Run the Subscriber
+    void run();	    
+
+};
+class SerConPub
+{
+private:
+
+    DomainParticipant* participant_;
+
+    Publisher* publisher_;
+
+    Topic* topic_;
+
+    DataWriter* writer_;
+
+    TypeSupport type_;
+
+    string mainPath_;
+   
+    SerCon message_;
+    public:
+
+    SerConPub();
+
+    ~SerConPub();
+        
+    //!Initialize the subscriber
+    bool init();
+    
+    //!Run the Subscriber
+    void run();	    
+};
+class ConSerSub
+{
+private:
+    
+    DomainParticipant* participant_;
+
+    Subscriber* subscriber_;
+
+    DataReader* reader_;
+
+    Topic* topic_;
+
+    TypeSupport type_;
+
+    string mainPath_;
+    
+    public:
+
+    ConSerSub();
+
+    ~ConSerSub();
+        
+    //!Initialize the subscriber
+    bool init();
+    
+    //!Run the Subscriber
+    void run();	    
+
 };

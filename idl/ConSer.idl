@@ -1,0 +1,5 @@
+struct ConSer
+{
+    uint64 seq;
+    string com;
+};

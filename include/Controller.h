@@ -1,5 +1,5 @@
-#include "CliSerPubSubTypes.h"
-#include "SerCliPubSubTypes.h"
+#include "ConSerPubSubTypes.h"
+#include "SerConPubSubTypes.h"
 
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
 #include <fastdds/dds/domain/DomainParticipant.hpp>
@@ -19,7 +19,7 @@
 using namespace eprosima::fastdds::dds;
 using namespace eprosima::fastdds::rtps;
 using namespace std;
-class CliSub
+class ConSub
 {
 private:
 
@@ -37,9 +37,9 @@ private:
     
     public:
 
-    CliSub();
+    ConSub();
 
-    ~CliSub();
+    ~ConSub();
         
     //!Initialize the subscriber
     bool init();
@@ -47,7 +47,7 @@ private:
     //!Run the Subscriber
     void run();	    
 };
-class CliPub
+class ConPub
 {
 private:
 
@@ -63,12 +63,12 @@ private:
 
     string mainPath_;
    
-    CliSer message_;
+    ConSer message_;
     public:
 
-    CliPub();
+    ConPub();
 
-    ~CliPub();
+    ~ConPub();
         
     //!Initialize the subscriber
     bool init();
