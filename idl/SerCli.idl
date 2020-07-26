@@ -1,5 +1,6 @@
 struct SerCli
 {
+    //@Key uint64 kk;
     uint64 seq;
     string com;
 };

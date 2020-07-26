@@ -2,7 +2,7 @@
 #include <cstdlib>
 #define TEST
 //------------------CliSub------------------------
-class CliSubReaderListener : public DataReaderListener
+/*class CliSubReaderListener : public DataReaderListener
 {
 
 public:
@@ -28,7 +28,7 @@ public:
 		    if (info.instance_state == ALIVE)
                 {
                     samples_++;
-                    std::cout << " with seq: " << message_.seq()
+                    std::cout << " with seq: " << message_.seq()//<<" with key: "<<message_.kk()
                                 << " samples:" <<samples_<<std::endl;
 		
 		}
@@ -82,7 +82,7 @@ public:
     }
 
     virtual void on_requested_incompatible_qos(
-            DataReader* /*reader*/,
+            DataReader*,
             const RequestedIncompatibleQosStatus& info)
     {
         std::cout << "Found a remote Topic with incompatible QoS (QoS ID: " << info.last_policy_id <<
@@ -153,7 +153,9 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
 
         // Create the DataReader
         reader_ = subscriber_->create_datareader_with_profile(topic_, "clisub0_datareader", &clisub_listener_);
-
+	DataReaderQos qos = reader_->get_qos();
+	qos.ownership().kind = EXCLUSIVE_OWNERSHIP_QOS;
+	reader_->set_qos(qos);
         if (reader_ == nullptr)
         {
             return false;
@@ -161,12 +163,6 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
 
         return true;
 
-}
-void CliSub::run(){
-while(true)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
 }
 //---------------CliPub-----------------
 class CliWriterListener : public DataWriterListener
@@ -210,7 +206,7 @@ std::atomic_int matched_;
     }
 
     virtual void on_offered_incompatible_qos(
-         DataWriter* /*writer*/,
+         DataWriter* ,
          const OfferedIncompatibleQosStatus& status)
     {
         std::cout << "Found a remote Topic with incompatible QoS (QoS ID: " << status.last_policy_id <<
@@ -257,7 +253,7 @@ CliPub::~CliPub()
 bool CliPub::init(){
 	cout<<"CliPub init"<<endl;
 DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/config/profiles.xml"); 
-	participant_ = DomainParticipantFactory::get_instance()->create_participant_with_profile(0, "clipub_participant");
+	participant_ = DomainParticipantFactory::get_instance()->create_participant_with_profile(0, "clisub_participant");
 
         if (participant_ == nullptr)
         {
@@ -314,4 +310,130 @@ writer_->write(&message_);
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 #endif
+}
+
+bool CliPub::send(){
+if(clipub_listener_.matched_>0){
+	writer_->write(&message_);
+	return true;
+}
+return false;
+}*/
+//---------------------
+Client::Client(string config)
+: participant_(nullptr)
+{
+	cout<<"new Client"<<endl;
+	mainPath_ = string(getenv("GTPATH"));
+DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/config/profiles.xml"); 
+	participant_ = DomainParticipantFactory::get_instance()->create_participant_with_profile(0, config);
+
+        if (participant_ == nullptr)
+        {
+		cout<<"participant init fail"<<endl;
+        	return;
+	}
+	types_.insert(pair<string, TypeSupport>("CliSer",new CliSerPubSubType()));
+	types_.insert(pair<string, TypeSupport>("SerCli",new SerCliPubSubType()));
+        types_["CliSer"].register_type(participant_);
+        types_["SerCli"].register_type(participant_);
+        
+	publisher_ = participant_->create_publisher(PUBLISHER_QOS_DEFAULT, nullptr);
+	if (publisher_ == nullptr)
+        {
+		cout<<"publisher init fail"<<endl;
+            return;
+        }
+        subscriber_ = participant_->create_subscriber(SUBSCRIBER_QOS_DEFAULT, nullptr);
+if (subscriber_ == nullptr)
+        {
+		cout<<"subscriber init fail"<<endl;
+            return;
+        }
+}
+    Client::~Client(){
+	    for(map<string, CliReader*>::iterator iter = readers_.begin();iter!= readers_.end();iter++){
+	    	if(iter->second->reader_ != nullptr)subscriber_->delete_datareader(iter->second->reader_);
+	    }
+	    	if(subscriber_ != nullptr)participant_->delete_subscriber(subscriber_);
+	for(map<string, CliWriter*>::iterator iter = writers_.begin();iter!=writers_.end();iter++){
+	    	if(iter->second->writer_ != nullptr)publisher_->delete_datawriter(iter->second->writer_);
+	    }
+	    	if(publisher_ != nullptr)participant_->delete_publisher(publisher_);
+for(map<string, Topic*>::iterator iter = topics_.begin();iter!=topics_.end();iter++){
+	    	if(iter->second != nullptr)participant_->delete_topic(iter->second);
+	    }
+        DomainParticipantFactory::get_instance()->delete_participant(participant_);
+}
+
+bool Client::addTopic(string topicName, string typeName){
+	map<string, TypeSupport>::iterator iter = types_.find(typeName);
+	if(iter == types_.end()){
+	cout<<"addTopic Fail: no such type: "<<typeName<<endl;
+	return false;
+	}
+	Topic* tmp = participant_->create_topic(topicName,(iter->second).get_type_name(), TOPIC_QOS_DEFAULT);
+	if(tmp == nullptr){
+	cout<<"addTopic Fail: create_topic: "<<topicName<<" fail"<<endl;
+	return false;
+	}
+	topics_.insert(pair<string,Topic*>(topicName,tmp));
+	return true;	
+}
+bool Client::addWriter(string name, string topicName, string typeName, string config, DataWriterListener* listener){
+map<string, Topic*>::iterator iter0 = topics_.find(topicName);
+if(iter0 == topics_.end()){
+cout<<"addWriter Fail: no such topic: "<<topicName<<endl;
+return false;
+}
+map<string, TypeSupport>::iterator iter1 = types_.find(typeName);
+if(iter1 == types_.end()){
+cout<<"addWriter Fail: no such type: "<<typeName<<endl;
+return false;
+}
+CliWriter* tmp = new CliWriter(topicName,typeName);
+tmp->writer_ = publisher_->create_datawriter_with_profile(iter0->second, config, listener);
+if (tmp->writer_ == nullptr)
+        {
+	cout<<"addWriter Fail: writer init fail"<<endl;
+            return false;
+        }
+writers_.insert(pair<string, CliWriter*>(name,tmp));
+return true;
+}
+bool Client::addReader(string name, string topicName, string typeName, string config, DataReaderListener* listener){
+map<string, Topic*>::iterator iter0 = topics_.find(topicName);
+if(iter0 == topics_.end()){
+cout<<"addReader Fail: no such topic: "<<topicName<<endl;
+return false;
+}
+map<string, TypeSupport>::iterator iter1 = types_.find(typeName);
+if(iter1 == types_.end()){
+cout<<"addReader Fail: no such type: "<<typeName<<endl;
+return false;
+}
+CliReader* tmp = new CliReader(topicName,typeName);
+tmp->reader_ = subscriber_->create_datareader_with_profile(iter0->second, config, listener);
+if (tmp->reader_ == nullptr)
+        {
+	cout<<"addReader Fail: reader init fail"<<endl;
+            return false;
+        }
+readers_.insert(pair<string, CliReader*>(name,tmp));
+return true;
+}
+bool Client::send(string name,CliWriterListener* listener, int seq){
+map<string, CliWriter*>::iterator iter = writers_.find(name);
+if(iter == writers_.end()){
+cout<<"send Fail: no such writer: "<<name<<endl;
+return false;
+}
+	if(listener->matched_ > 0){
+		iter->second->message_.seq(seq);
+		iter->second->writer_->write(&(iter->second->message_));
+		return true;
+	}else{
+	cout<<"send Fail: no matched reader"<<endl;
+return false;
+	}
 }

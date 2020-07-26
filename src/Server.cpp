@@ -119,9 +119,12 @@ DomainParticipantFactory::get_instance()->load_XML_profiles_file(mainPath_+"/con
             return false;
         }
 
-        // Create the DataReader
+        // Create the DataWriter
         writer_ = publisher_->create_datawriter_with_profile(topic_, "serclipub0_datawriter", &serclipub_listener_);
-
+	/*DataWriterQos qos = writer_->get_qos();
+	qos.ownership().kind = EXCLUSIVE_OWNERSHIP_QOS;
+	qos.ownership_strength().value = 10;	
+	writer_->set_qos(qos);*/
         if (writer_ == nullptr)
         {
 
@@ -136,6 +139,7 @@ void SerCliPub::run(){
 	cout<<"SerCliPub run"<<endl;
 	uint32_t test_send = 50;
 	uint64_t i = 0;
+	//message_.kk(0);
 	message_.seq(0);
 while(i<test_send){	
         while(serclipub_listener_.matched_ > 0){
@@ -144,7 +148,7 @@ while(i<test_send){
 		if(i>=test_send)break;
 		cout<<"publish seq:"<<message_.seq()<<endl;
 writer_->write(&message_);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }

@@ -98,6 +98,7 @@
 			<rtps>
 				<userTransports>
 					<transport_id>clisub_transport</transport_id>
+					<transport_id>clipub_transport</transport_id>
 					<transport_id>default_transport</transport_id>
 				</userTransports>
 				<useBuiltinTransports>false</useBuiltinTransports>
@@ -208,6 +209,11 @@
 				<name>SerCli0</name>
 				<dataType>SerCli</dataType>
 			</topic>
+			<qos>
+			<reliability>
+                    <kind>RELIABLE</kind>
+                </reliability>
+			</qos>
 		</data_reader>
 
 		<data_writer profile_name="clipub0_datawriter">

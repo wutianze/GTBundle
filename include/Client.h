@@ -1,3 +1,5 @@
+#ifndef CLIENT_H
+#define CLIENT_H
 #include "CliSerPubSubTypes.h"
 #include "SerCliPubSubTypes.h"
 
@@ -16,10 +18,13 @@
 #include <fastrtps/utils/IPLocator.h>
 #include <fastrtps/qos/QosPolicies.h>
 #include <fstream>
+#include <map>
+
+#include "Listener.h"
 using namespace eprosima::fastdds::dds;
 using namespace eprosima::fastdds::rtps;
 using namespace std;
-class CliSub
+/*class CliSub
 {
 private:
 
@@ -44,8 +49,6 @@ private:
     //!Initialize the subscriber
     bool init();
     
-    //!Run the Subscriber
-    void run();	    
 };
 class CliPub
 {
@@ -73,6 +76,64 @@ private:
     //!Initialize the subscriber
     bool init();
     
-    //!Run the Subscriber
-    void run();	    
+    //!Run the Publisher for test
+    void run();	   
+
+    bool send();
+};*/
+class CliReader{
+	public:
+    DataReader* reader_;
+
+    string topicName_;
+
+    string typeName_;
+
+
+CliReader(string tn, string tyn):reader_(nullptr),topicName_(tn),typeName_(tyn){};
 };
+class CliWriter{
+	public:
+    DataWriter* writer_;
+
+    string topicName_;
+
+    string typeName_;
+
+    CliSer message_;
+    CliWriter(string tn, string tyn):writer_(nullptr),topicName_(tn),typeName_(tyn){};
+};
+class Client
+{
+private:
+
+    DomainParticipant* participant_;
+    
+
+    Publisher* publisher_;
+    Subscriber* subscriber_;
+    
+    map<string, CliReader*> readers_;
+
+    map<string, CliWriter*> writers_;
+    
+    map<string, Topic*> topics_;
+
+    //TypeSupport is shared_ptr
+    map<string, TypeSupport> types_;
+
+    string mainPath_;
+
+    public:
+
+    Client(string config);
+
+    ~Client();
+        
+    bool addTopic(string topicName,string typeName);
+    bool addWriter(string name, string topicName,string typeName, string config, DataWriterListener* listener);
+    bool addReader(string name, string topicName,string typeName, string config, DataReaderListener* listener);
+    
+    bool send(string name,CliWriterListener*listener, int seq);
+};
+#endif

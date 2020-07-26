@@ -49,6 +49,8 @@ private:
     
     //!Run the Subscriber
     void run();	    
+
+    bool send();
 };
 class CliSerSub
 {
