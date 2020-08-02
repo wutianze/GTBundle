@@ -13,6 +13,13 @@ public static byte[] int2Bytes(int n)
   b[3] = (byte) (n >> 24 & 0xff);  
   return b;  
 }
+public static int bytes2Int(byte[] b) {
+	    return   b[0] & 0xFF |
+	            (b[1] & 0xFF) << 8 |
+	            (b[2] & 0xFF) << 16 |
+	            (b[3] & 0xFF) << 24;
+	}
+
    public static void main(String [] args)
    {
       String serverName = args[0];
@@ -26,30 +33,42 @@ public static byte[] int2Bytes(int n)
          DataOutputStream out = new DataOutputStream(outToServer);
  
          //out.write("aaa".getBytes("UTF-8"));
-	 String filled = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
 	 byte[] tmp = ("{\"clientIP\":\"aaa\",\"seq\":10}").getBytes("UTF-8");
       	System.out.println("bytes len:"+tmp.length);
          out.write(int2Bytes(tmp.length));
          out.write(tmp);
-	
+Thread.sleep(3000);	
 	 out.write(int2Bytes(tmp.length));
          out.write(tmp);
 
-         InputStream inFromServer = client.getInputStream();
-         DataInputStream in = new DataInputStream(inFromServer);
-         in.read();
-	 byte[] bytes = new byte[1024];
-    	int len;
-    if((len = in.read(bytes)) != -1) {
-      System.out.println("respond len:"+len+", content:"+new String(bytes, 0, len,"UTF-8"));
-    }
-
+         
 	 //System.out.println("服务器响应： " + in.read());
     byte[] endd =   "exit".getBytes("UTF-8");  
     out.write(int2Bytes(endd.length));
          out.write(endd);
+InputStream inFromServer = client.getInputStream();
+	 DataInputStream in = new DataInputStream(inFromServer);
+while(true){         
+int rec_size=0;
+	 byte[] rec_s = new byte[4];
+         int len0;
+	 if((len0 = in.read(rec_s))!=-1){
+	 rec_size = bytes2Int(rec_s);
+	 System.out.println("len0:"+len0+" rec_size:"+rec_size);
+	 }else{
+	 break;
+	 }
+
+	 byte[] bytes = new byte[rec_size];
+    in.readFully(bytes);
+      System.out.println("respond content:"+new String(bytes, 0, rec_size,"UTF-8"));
+}
          client.close();
       }catch(IOException e)
+      {
+         e.printStackTrace();
+      }
+catch(Exception e)
       {
          e.printStackTrace();
       }

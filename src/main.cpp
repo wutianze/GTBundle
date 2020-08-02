@@ -4,7 +4,7 @@
 #include"Client.h"
 //#include"Server.h"
 #include"Listener.h"
-#include"pistache/endpoint.h"
+//#include"pistache/endpoint.h"
 //#include"json.hpp"
 #include <cstdio>
 #include <cstdlib>
@@ -19,7 +19,8 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
-
+#include<pthread.h>
+#include<atomic>
 #define TEST
 using namespace std;
 using namespace rapidjson;
@@ -31,7 +32,40 @@ struct HelloHandler : public Http::Handler {
     writer.send(Http::Code::Ok, "Hello, World!");
   }
 };*/
+atomic_bool ifcon(false);
+void* recvsocket(void* arg)//接受来着客户端数据的线程
+{
+    int conn = *(int*)arg;
+while (true) {
+	int toRec;
+	int len = recv(conn,&toRec,sizeof(toRec),0);
+	if(len <=0){
+	cout<<"server recv fail"<<endl;
+	break;
+	}
+	cout<<"recv int:"<<toRec<<endl;
 
+	        char buf[toRec+1];
+            memset(buf, 0, sizeof(buf));
+            int bytesLeft = toRec;
+	    char* ptr = buf;
+	    while(bytesLeft>0){
+	    int len = recv(conn, ptr, bytesLeft, 0);
+	    bytesLeft-=len;
+	    ptr+=len;
+	    std::cout<<"recv len:"<<len<<std::endl;
+	    buf[toRec] = '\0';
+	    }
+		std::cout <<"rec content:"<< buf<<std::endl;
+	    if (strcmp(buf, "exit") == 0) {
+                std::cout << "...disconnect " << std::endl;
+		ifcon = false;
+		break;
+        }
+
+}
+    return NULL;
+}
 int main(int argc, char** argv){
 /*char* xmlName;
 	if(argc < 2){
@@ -56,7 +90,6 @@ cout<<"CLIENT1"<<clientElement->FirstAttribute()->Next()->Value()<<endl;
 */
 
 #ifdef TEST
-
 //Http::listenAndServe<HelloHandler>(Pistache::Address("*:9080"));
 //cout<<"http server up"<<endl;
 //string roleS(roleElement->GetText());
@@ -83,6 +116,7 @@ string roleS(argv[1]);
 shared_ptr<Client> c(new Client("clisub_participant"));
 c->addTopic("SerCli0","SerCli");
 if(roleS == "server"){
+	pthread_t tid;
 std::cout << "This is server" << std::endl;
     // socket
     int listenfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -109,8 +143,9 @@ std::cout << "This is server" << std::endl;
     char clientIP[INET_ADDRSTRLEN] = "";
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
-   bool exitFlag = true;
-    while(exitFlag){ 
+   //bool exitFlag = true;
+   ifcon = true;
+    while(ifcon){ 
         std::cout << "...listening" << std::endl;
         conn = accept(listenfd, (struct sockaddr*)&clientAddr, &clientAddrLen);
         if (conn < 0) {
@@ -119,8 +154,12 @@ std::cout << "This is server" << std::endl;
         }
         inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
         std::cout << "...connect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
-
-        while (true) {
+	if(pthread_create(&tid,NULL,recvsocket,(void*)&conn)){
+	cout<<"thread create fail"<<endl;
+	continue;
+	}
+        while (ifcon) {
+		/*
 	int toRec;
 	int len = recv(conn,&toRec,sizeof(toRec),0);
 	cout<<"recv int:"<<toRec<<endl;
@@ -130,7 +169,7 @@ std::cout << "This is server" << std::endl;
             int bytesLeft = toRec;
 	    char* ptr = buf;
 	    while(bytesLeft>0){
-	    int len = recv(conn, ptr, sizeof(buf), 0);
+	    int len = recv(conn, ptr, bytesLeft, 0);
 	    bytesLeft-=len;
 	    ptr+=len;
 	    std::cout<<"recv len:"<<len<<std::endl;
@@ -139,21 +178,43 @@ std::cout << "This is server" << std::endl;
 	    if (strcmp(buf, "exit") == 0) {
                 std::cout << "...disconnect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
                 exitFlag = false;
+		string to_send= "aaabbcc";
+	    char to_send_size[5];
+	    int tss = to_send.size();
+	    cout<<"respond int:"<<tss<<" sizeof int "<<sizeof(int)<<endl;
+	    memcpy(to_send_size,&tss,sizeof(int));
+for (int j = 0; j < 4; j++){
+    printf("size content: %x\n", to_send_size[j]);
+}
+	    send(conn, to_send_size, sizeof(int), 0);
+	    send(conn, to_send.c_str(), to_send.size()+1, 0);
 		break;
             }
 	    std::cout <<"rec content:"<< buf<<std::endl;
-            //Document d;
-	    //d.Parse(buf);
-	    //cout<<"rec clientIP"<<d["clientIP"].GetString()<<endl;
-            string to_send= "aaabbcc";
+            */
+string to_send= "aaabbcc";
+	    char to_send_size[5];
+	    int tss = to_send.size();
+	    cout<<"respond int:"<<tss<<" sizeof int "<<sizeof(int)<<endl;
+	    memcpy(to_send_size,&tss,sizeof(int));
+for (int j = 0; j < 4; j++){
+    printf("size content: %x\n", to_send_size[j]);
+}
+	    if(send(conn, to_send_size, sizeof(int), 0) == -1){
+	    cout<<"server send fail"<<endl;
+	    break;
+	    }
+	    if(send(conn, to_send.c_str(), to_send.size()+1, 0) ==-1){
+	    cout<<"server send fail"<<endl;
+	    break;
 
-	    send(conn, to_send.c_str(), to_send.size()+1, 0);
+	    }
+sleep(1);
         }
         
         close(conn);
     }
     close(listenfd);
-
 	
 	/*CliWriterListener wl;
 	c->addWriter("serpub","SerCli0","SerCli","serclipub0_datawriter",&wl);
