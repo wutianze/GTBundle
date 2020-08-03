@@ -19,7 +19,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
-#include<pthread.h>
+#include<thread>
 #include<atomic>
 #define TEST
 using namespace std;
@@ -33,9 +33,8 @@ struct HelloHandler : public Http::Handler {
   }
 };*/
 atomic_bool ifcon(false);
-void* recvsocket(void* arg)//接受来着客户端数据的线程
+void recvsocket(int conn)//接受来着客户端数据的线程
 {
-    int conn = *(int*)arg;
 while (true) {
 	int toRec;
 	int len = recv(conn,&toRec,sizeof(toRec),0);
@@ -64,7 +63,7 @@ while (true) {
         }
 
 }
-    return NULL;
+    return;
 }
 int main(int argc, char** argv){
 /*char* xmlName;
@@ -116,7 +115,6 @@ string roleS(argv[1]);
 shared_ptr<Client> c(new Client("clisub_participant"));
 c->addTopic("SerCli0","SerCli");
 if(roleS == "server"){
-	pthread_t tid;
 std::cout << "This is server" << std::endl;
     // socket
     int listenfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -145,6 +143,7 @@ std::cout << "This is server" << std::endl;
     socklen_t clientAddrLen = sizeof(clientAddr);
    //bool exitFlag = true;
    ifcon = true;
+   thread t0;
     while(ifcon){ 
         std::cout << "...listening" << std::endl;
         conn = accept(listenfd, (struct sockaddr*)&clientAddr, &clientAddrLen);
@@ -154,10 +153,7 @@ std::cout << "This is server" << std::endl;
         }
         inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
         std::cout << "...connect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
-	if(pthread_create(&tid,NULL,recvsocket,(void*)&conn)){
-	cout<<"thread create fail"<<endl;
-	continue;
-	}
+	t0 = thread(recvsocket,conn);
         while (ifcon) {
 		/*
 	int toRec;
@@ -193,7 +189,7 @@ for (int j = 0; j < 4; j++){
 	    std::cout <<"rec content:"<< buf<<std::endl;
             */
 string to_send= "aaabbcc";
-	    char to_send_size[5];
+	    char to_send_size[4];
 	    int tss = to_send.size();
 	    cout<<"respond int:"<<tss<<" sizeof int "<<sizeof(int)<<endl;
 	    memcpy(to_send_size,&tss,sizeof(int));
@@ -204,14 +200,13 @@ for (int j = 0; j < 4; j++){
 	    cout<<"server send fail"<<endl;
 	    break;
 	    }
-	    if(send(conn, to_send.c_str(), to_send.size()+1, 0) ==-1){
+	    if(send(conn, to_send.c_str(), to_send.size(), 0) ==-1){
 	    cout<<"server send fail"<<endl;
 	    break;
-
 	    }
 sleep(1);
         }
-        
+       t0.join(); 
         close(conn);
     }
     close(listenfd);
