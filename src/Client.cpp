@@ -422,8 +422,23 @@ bool Client::addReader(string name, string topicName, string typeName, string co
 	readers_.insert(pair<string, CliReader*>(name,tmp));
 	return true;
 }
-bool Client::send(string name,CliWriterListener* listener, int seq){
+bool Client::sendCli(string name,CliWriterListener* listener, int seq){
 	map<string, CliWriter*>::iterator iter = writers_.find(name);
+	if(iter == writers_.end()){
+		cout<<"send Fail: no such writer: "<<name<<endl;
+		return false;
+	}
+	if(listener->matched_ > 0){
+		iter->second->message_.seq(seq);
+		iter->second->writer_->write(&(iter->second->message_));
+		return true;
+	}else{
+		cout<<"send Fail: no matched reader"<<endl;
+		return false;
+	}
+}
+bool Client::sendSerCli(string name,SerCliWriterListener* listener, int seq){
+	map<string, SerCliWriter*>::iterator iter = writers_.find(name);
 	if(iter == writers_.end()){
 		cout<<"send Fail: no such writer: "<<name<<endl;
 		return false;

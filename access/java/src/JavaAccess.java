@@ -76,6 +76,7 @@ public JavaAccess(String serverName, int port){
 }
 public boolean reconnect(String serverName, int port){
 	try{
+		conn.close();
 	System.out.println("connect to server:" + serverName + ", port:" + port);
          conn = new Socket(serverName, port);
          System.out.println("remote address:" + conn.getRemoteSocketAddress());

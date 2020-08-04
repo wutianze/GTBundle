@@ -1,3 +1,4 @@
+#usage: in GTPATH: ./script/generateIDL.sh SerCli
 echo name:$1
 rm $GTPATH/include/$1.h
 rm $GTPATH/src/$1.cxx

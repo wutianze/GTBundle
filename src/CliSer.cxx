@@ -34,9 +34,9 @@ using namespace eprosima::fastcdr::exception;
 
 CliSer::CliSer()
 {
-    // m_seq com.eprosima.idl.parser.typecode.PrimitiveTypeCode@2b2948e2
+    // m_seq com.eprosima.idl.parser.typecode.PrimitiveTypeCode@6121c9d6
     m_seq = 0;
-    // m_com com.eprosima.idl.parser.typecode.StringTypeCode@57536d79
+    // m_com com.eprosima.idl.parser.typecode.StringTypeCode@eafc191
     m_com ="";
 
 }

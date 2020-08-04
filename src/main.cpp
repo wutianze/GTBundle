@@ -1,6 +1,6 @@
 #include<iostream>
 #include<string>
-#include"tinyxml2.h"
+//#include"tinyxml2.h"
 #include"Client.h"
 //#include"Server.h"
 #include"Listener.h"
@@ -21,6 +21,7 @@
 #include "rapidjson/stringbuffer.h"
 #include<thread>
 #include<atomic>
+#include"AccessServer.h"
 #define TEST
 using namespace std;
 using namespace rapidjson;
@@ -32,7 +33,7 @@ struct HelloHandler : public Http::Handler {
     writer.send(Http::Code::Ok, "Hello, World!");
   }
 };*/
-atomic_bool ifcon(false);
+/*atomic_bool ifcon(false);
 void recvsocket(int conn)//接受来着客户端数据的线程
 {
 while (true) {
@@ -64,7 +65,7 @@ while (true) {
 
 }
     return;
-}
+}*/
 int main(int argc, char** argv){
 /*char* xmlName;
 	if(argc < 2){
@@ -112,118 +113,39 @@ string roleS(argv[1]);
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 }*/
-shared_ptr<Client> c(new Client("clisub_participant"));
-c->addTopic("SerCli0","SerCli");
-if(roleS == "server"){
-std::cout << "This is server" << std::endl;
-    // socket
-    int listenfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (listenfd == -1) {
-        std::cout << "Error: socket" << std::endl;
-        return 0;
-    }
-    // bind
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(8000);
-    addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(listenfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
-        std::cout << "Error: bind" << std::endl;
-        return 0;
-    }
-    // listen
-    if(listen(listenfd, 5) == -1) {
-        std::cout << "Error: listen" << std::endl;
-        return 0;
-    }
-    // accept
-    int conn;
-    char clientIP[INET_ADDRSTRLEN] = "";
-    struct sockaddr_in clientAddr;
-    socklen_t clientAddrLen = sizeof(clientAddr);
-   //bool exitFlag = true;
-   ifcon = true;
-   thread t0;
-    while(ifcon){ 
-        std::cout << "...listening" << std::endl;
-        conn = accept(listenfd, (struct sockaddr*)&clientAddr, &clientAddrLen);
-        if (conn < 0) {
-            std::cout << "Error: accept" << std::endl;
-            continue;
-        }
-        inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
-        std::cout << "...connect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
-	t0 = thread(recvsocket,conn);
-        while (ifcon) {
-		/*
-	int toRec;
-	int len = recv(conn,&toRec,sizeof(toRec),0);
-	cout<<"recv int:"<<toRec<<endl;
 
-	        char buf[toRec+1];
-            memset(buf, 0, sizeof(buf));
-            int bytesLeft = toRec;
-	    char* ptr = buf;
-	    while(bytesLeft>0){
-	    int len = recv(conn, ptr, bytesLeft, 0);
-	    bytesLeft-=len;
-	    ptr+=len;
-	    std::cout<<"recv len:"<<len<<std::endl;
-	    buf[toRec] = '\0';
-	    }
-	    if (strcmp(buf, "exit") == 0) {
-                std::cout << "...disconnect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
-                exitFlag = false;
-		string to_send= "aaabbcc";
-	    char to_send_size[5];
-	    int tss = to_send.size();
-	    cout<<"respond int:"<<tss<<" sizeof int "<<sizeof(int)<<endl;
-	    memcpy(to_send_size,&tss,sizeof(int));
-for (int j = 0; j < 4; j++){
-    printf("size content: %x\n", to_send_size[j]);
-}
-	    send(conn, to_send_size, sizeof(int), 0);
-	    send(conn, to_send.c_str(), to_send.size()+1, 0);
-		break;
-            }
-	    std::cout <<"rec content:"<< buf<<std::endl;
-            */
-string to_send= "aaabbcc";
-	    char to_send_size[4];
-	    int tss = to_send.size();
-	    cout<<"respond int:"<<tss<<" sizeof int "<<sizeof(int)<<endl;
-	    memcpy(to_send_size,&tss,sizeof(int));
-for (int j = 0; j < 4; j++){
-    printf("size content: %x\n", to_send_size[j]);
-}
-	    if(send(conn, to_send_size, sizeof(int), 0) == -1){
-	    cout<<"server send fail"<<endl;
-	    break;
-	    }
-	    if(send(conn, to_send.c_str(), to_send.size(), 0) ==-1){
-	    cout<<"server send fail"<<endl;
-	    break;
-	    }
-sleep(1);
-        }
-       t0.join(); 
-        close(conn);
-    }
-    close(listenfd);
-	
-	/*CliWriterListener wl;
-	c->addWriter("serpub","SerCli0","SerCli","serclipub0_datawriter",&wl);
-CliReaderListener rl;
-c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",&rl);
-int i = 0;
-	while(true){
-c->send("serpub",&wl,i);
-i++;
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-}*/
+if(roleS == "server"){
+cout<<"server here"<<endl;
+shared_ptr<Client> c(new Client("ser_participant"));
+c->addTopic("SerCli0","SerCli");
+
+SerCliWriterListener wl;
+	c->addWriter("serclipub","SerCli0","SerCli","serclipub0_datawriter",&wl);
+CliSerReaderListener rl;
+c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",&rl);
 }else{
+cout<<"client here"<<endl;
+shared_ptr<Client> c(new Client("cli_participant"));
+c->addTopic("SerCli0","SerCli");
+c->addTopic("CliSer0","CliSer");
+
+CliWriterListener wl;
+	c->addWriter("clipub","CliSer0","CliSer","clipub0_datawriter",&wl);
 CliReaderListener rl;
+
+AccessServer* as = new AccessServer(8000);
+
+rl.setSocketServer(as);
 c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",&rl);
+
+auto onMessage = [](string msg,Client* c, Cli){
+cout<<"in onMessage:"<<msg<<endl;
+c->send("clipub",&wl,233);
+};
+thread r0 = as->CreateReader(as->Accept(),onMessage);
+//as->Send(0,"1234567");
+r0.join();
+as->CloseConnect(0);
 }
 #endif
 

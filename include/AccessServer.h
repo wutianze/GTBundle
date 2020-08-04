@@ -1,0 +1,59 @@
+#ifndef ACCESSERVER_H
+#define ACCESSERVER_H
+#include<iostream>
+#include<string>
+#include <cstdio>
+#include <cstdlib>
+#include <cerrno>
+#include <cstring>
+
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+#include<thread>
+#include<atomic>
+#include<vector>
+using namespace std;
+class AccessServer{
+private:
+       	int listenfd_;
+	struct sockaddr_in addr_;
+	vector<int> conn_;
+	atomic_bool ifcon_;
+
+public:
+	AccessServer(int port){
+// socket
+    listenfd_ = socket(AF_INET, SOCK_STREAM, 0);
+    if (listenfd_ == -1) {
+        std::cout << "Error: socket" << std::endl;
+        return;
+    }
+    // bind
+    addr_.sin_family = AF_INET;
+    addr_.sin_port = htons(port);
+    addr_.sin_addr.s_addr = INADDR_ANY;
+    if (bind(listenfd_, (struct sockaddr*)&addr_, sizeof(addr_)) == -1) {
+        std::cout << "Error: bind" << std::endl;
+        return;
+    }
+    // listen
+    if(listen(listenfd_, 5) == -1) {
+        std::cout << "Error: listen" << std::endl;
+        return;
+    }
+    cout<<"start listen"<<endl;
+
+}
+int Accept();
+thread CreateReader(int,void(*function)(string));
+bool Send(int,string);
+bool CloseConnect(int);
+bool CloseSocket();
+};
+#endif

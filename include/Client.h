@@ -81,7 +81,7 @@ private:
 
     bool send();
 };*/
-class CliReader{
+class BunReader{
 	public:
     DataReader* reader_;
 
@@ -90,9 +90,9 @@ class CliReader{
     string typeName_;
 
 
-CliReader(string tn, string tyn):reader_(nullptr),topicName_(tn),typeName_(tyn){};
+BunReader(string tn, string tyn):reader_(nullptr),topicName_(tn),typeName_(tyn){};
 };
-class CliWriter{
+class BunWriter{
 	public:
     DataWriter* writer_;
 
@@ -101,9 +101,11 @@ class CliWriter{
     string typeName_;
 
     CliSer message_;
-    CliWriter(string tn, string tyn):writer_(nullptr),topicName_(tn),typeName_(tyn){};
+    virtual send() = 0;
+    BunWriter(string tn, string tyn):writer_(nullptr),topicName_(tn),typeName_(tyn){};
 };
-class Client
+
+class Bundle
 {
 private:
 
@@ -113,9 +115,9 @@ private:
     Publisher* publisher_;
     Subscriber* subscriber_;
     
-    map<string, CliReader*> readers_;
+    map<string, BunReader*> readers_;
 
-    map<string, CliWriter*> writers_;
+    map<string, BunWriter*> writers_;
     
     map<string, Topic*> topics_;
 
@@ -126,9 +128,9 @@ private:
 
     public:
 
-    Client(string config);
+    Bundle(string config);
 
-    ~Client();
+    ~Bundle();
         
     bool addTopic(string topicName,string typeName);
     bool addWriter(string name, string topicName,string typeName, string config, DataWriterListener* listener);
