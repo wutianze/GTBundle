@@ -19,9 +19,9 @@ conn_.push_back(tmp_conn);
         std::cout << "...connect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
 return conn_.size()-1;
 }
-thread AccessServer::CreateReader(int index, void(*function)(string)){
+thread AccessServer::CreateReader(int index,BunWriter* bw, void(*function)(string,BunWriter*)){
     int tmp_conn = conn_[index];
-	return thread([tmp_conn,function]{
+	return thread([tmp_conn,function,bw]{
 	while (true) {
 	int toRec;
 	int len = recv(tmp_conn,&toRec,sizeof(toRec),0);
@@ -48,7 +48,7 @@ thread AccessServer::CreateReader(int index, void(*function)(string)){
 		//ifcon_ = false;
 		break;
         }
-	    function(string(buf));
+	    function(string(buf),bw);
 }	
 		});
 }
@@ -71,10 +71,12 @@ bool AccessServer::Send(int index, string to_send){
 return true;
 }
 bool AccessServer::CloseConnect(int index){
+	cout<<"CloseConnect"<<endl;
 close(conn_[index]);
 return true;
 }
 bool AccessServer::CloseSocket(){
+	cout<<"CloseSocket"<<endl;
 close(listenfd_);
 return true;
 }

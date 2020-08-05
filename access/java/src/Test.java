@@ -18,8 +18,8 @@ jA.send("{\"clientIP\":\"aaa\",\"seq\":10}");
 Thread.sleep(3000);	
 jA.send("{\"clientIP\":\"aaa\",\"seq\":10}");
 Thread.sleep(3000);	
-jA.disconnect();
 jA.send("exit");
+jA.disconnect();
 readerT.join();
 
 System.out.println("java Client stop");

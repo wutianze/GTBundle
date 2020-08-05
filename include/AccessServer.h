@@ -18,14 +18,17 @@
 #include<thread>
 #include<atomic>
 #include<vector>
+#include "Bundle.h"
+#include "Listener.h"
 using namespace std;
+class BunWriter;
+class CliReaderListener;
 class AccessServer{
 private:
        	int listenfd_;
 	struct sockaddr_in addr_;
 	vector<int> conn_;
 	atomic_bool ifcon_;
-
 public:
 	AccessServer(int port){
 // socket
@@ -50,8 +53,11 @@ public:
     cout<<"start listen"<<endl;
 
 }
+~AccessServer(){
+cout<<"delete AccessServer"<<endl;
+}
 int Accept();
-thread CreateReader(int,void(*function)(string));
+thread CreateReader(int,BunWriter*,void(*function)(string,BunWriter*));
 bool Send(int,string);
 bool CloseConnect(int);
 bool CloseSocket();

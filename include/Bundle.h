@@ -1,5 +1,5 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef BUNDLE_H
+#define BUNDLE_H
 #include "CliSerPubSubTypes.h"
 #include "SerCliPubSubTypes.h"
 
@@ -24,63 +24,7 @@
 using namespace eprosima::fastdds::dds;
 using namespace eprosima::fastdds::rtps;
 using namespace std;
-/*class CliSub
-{
-private:
-
-    DomainParticipant* participant_;
-
-    Subscriber* subscriber_;
-
-    DataReader* reader_;
-
-    Topic* topic_;
-
-    TypeSupport type_;
-
-    string mainPath_;
-    
-    public:
-
-    CliSub();
-
-    ~CliSub();
-        
-    //!Initialize the subscriber
-    bool init();
-    
-};
-class CliPub
-{
-private:
-
-    DomainParticipant* participant_;
-
-    Publisher* publisher_;
-
-    Topic* topic_;
-
-    DataWriter* writer_;
-
-    TypeSupport type_;
-
-    string mainPath_;
-   
-    CliSer message_;
-    public:
-
-    CliPub();
-
-    ~CliPub();
-        
-    //!Initialize the subscriber
-    bool init();
-    
-    //!Run the Publisher for test
-    void run();	   
-
-    bool send();
-};*/
+class GeneralWriterListener;
 class BunReader{
 	public:
     DataReader* reader_;
@@ -91,6 +35,9 @@ class BunReader{
 
 
 BunReader(string tn, string tyn):reader_(nullptr),topicName_(tn),typeName_(tyn){};
+virtual ~BunReader(){
+cout<<"delete BunReader"<<endl;
+}
 };
 class BunWriter{
 	public:
@@ -99,12 +46,21 @@ class BunWriter{
     string topicName_;
 
     string typeName_;
-
-    CliSer message_;
-    virtual send() = 0;
+    virtual bool send();
+    virtual ~BunWriter(){
+    cout<<"delete BunWriter"<<endl;
+    };
     BunWriter(string tn, string tyn):writer_(nullptr),topicName_(tn),typeName_(tyn){};
 };
-
+class CliWriter:public BunWriter{
+	public:
+		CliWriter(string tn, string tyn):BunWriter(tn,tyn){};
+	CliSer message_;
+virtual bool send();
+virtual ~CliWriter(){
+    cout<<"delete CliWriter"<<endl;
+};
+};
 class Bundle
 {
 private:
@@ -133,9 +89,9 @@ private:
     ~Bundle();
         
     bool addTopic(string topicName,string typeName);
-    bool addWriter(string name, string topicName,string typeName, string config, DataWriterListener* listener);
+    bool addWriter(string name, string config, DataWriterListener* listener,BunWriter* bunwriter);
     bool addReader(string name, string topicName,string typeName, string config, DataReaderListener* listener);
-    
-    bool send(string name,CliWriterListener*listener, int seq);
+    BunWriter* getWriter(string name);
+    bool send(string name,GeneralWriterListener*listener);
 };
 #endif

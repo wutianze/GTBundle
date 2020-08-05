@@ -1,7 +1,7 @@
 #include<iostream>
 #include<string>
 //#include"tinyxml2.h"
-#include"Client.h"
+#include"Bundle.h"
 //#include"Server.h"
 #include"Listener.h"
 //#include"pistache/endpoint.h"
@@ -115,38 +115,54 @@ string roleS(argv[1]);
 }*/
 
 if(roleS == "server"){
+	/*
 cout<<"server here"<<endl;
-shared_ptr<Client> c(new Client("ser_participant"));
+shared_ptr<Bundle> c(new Bundle("ser_participant"));
 c->addTopic("SerCli0","SerCli");
 
-SerCliWriterListener wl;
-	c->addWriter("serclipub","SerCli0","SerCli","serclipub0_datawriter",&wl);
-CliSerReaderListener rl;
-c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",&rl);
+GeneralWriterListener* wl=new GeneralWriterListener();
+	c->addWriter("serclipub","SerCli0","SerCli","serclipub0_datawriter",wl);
+CliSerReaderListener* rl = new CliSerReaderListener();
+c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",rl);
+*/
 }else{
 cout<<"client here"<<endl;
-shared_ptr<Client> c(new Client("cli_participant"));
+Bundle* c = new Bundle("cli_participant");
 c->addTopic("SerCli0","SerCli");
 c->addTopic("CliSer0","CliSer");
 
-CliWriterListener wl;
-	c->addWriter("clipub","CliSer0","CliSer","clipub0_datawriter",&wl);
-CliReaderListener rl;
+GeneralWriterListener* wl=new GeneralWriterListener();
+CliWriter* cliw = new CliWriter("CliSer0","CliSer");
+	c->addWriter("clipub","clipub0_datawriter",wl,cliw);
+CliReaderListener*rl=new CliReaderListener();
 
-AccessServer* as = new AccessServer(8000);
+AccessServer* as=new AccessServer(8000);
 
-rl.setSocketServer(as);
-c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",&rl);
+rl->setSocketServer(as);
+c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",rl);
 
-auto onMessage = [](string msg,Client* c, Cli){
+auto onMessage = [](string msg,BunWriter* bw){
 cout<<"in onMessage:"<<msg<<endl;
-c->send("clipub",&wl,233);
+CliWriter* cw =dynamic_cast<CliWriter*>(bw);
+if(cw == nullptr){
+cout<<"onMessage Writer transfer wrong"<<endl;
+return;
+}
+(cw->message_).seq(2);
+cw->send();
 };
-thread r0 = as->CreateReader(as->Accept(),onMessage);
+thread r0 = as->CreateReader(as->Accept(),c->getWriter("clipub"),onMessage);
 //as->Send(0,"1234567");
 r0.join();
 as->CloseConnect(0);
+cout<<"close connect finished"<<endl;
+delete as;
+delete wl;
+delete rl;
+delete c;
+cout<<"final delete finished"<<endl;
 }
+
 #endif
 
 return 0;
