@@ -6,10 +6,29 @@ cout<<"BunWriter::send: do nothing"<<endl;
 	return true;
 }
 bool CliWriter::send(){
+	GeneralWriterListener* tmp = dynamic_cast<GeneralWriterListener*>(writer_listener_);	
+	if(tmp == nullptr){
+	cout<<"send transfer GeneralWriterListener fail"<<endl;
+	return false;
+	}
+	if(tmp->matched_>0){
 writer_->write(&message_);
 return true;
+	}
+return false;
 }
-
+bool SerCliWriter::send(){
+	GeneralWriterListener* tmp = dynamic_cast<GeneralWriterListener*>(writer_listener_);	
+	if(tmp == nullptr){
+	cout<<"send transfer GeneralWriterListener fail"<<endl;
+	return false;
+	}
+	if(tmp->matched_>0){
+writer_->write(&message_);
+return true;
+	}
+return false;
+}
 Bundle::Bundle(string config)
 	: participant_(nullptr)
 {
@@ -45,6 +64,7 @@ Bundle::~Bundle(){
 	cout<<"delete Bundle"<<endl;
 	for(map<string, BunReader*>::iterator iter = readers_.begin();iter!= readers_.end();iter++){
 		if(iter->second->reader_ != nullptr)subscriber_->delete_datareader(iter->second->reader_);
+		delete iter->second->reader_listener_;
 		delete iter->second;
 		iter->second = nullptr;
 	}
@@ -52,6 +72,7 @@ Bundle::~Bundle(){
 	for(map<string, BunWriter*>::iterator iter = writers_.begin();iter!=writers_.end();iter++){
 		if(iter->second->writer_ != nullptr)publisher_->delete_datawriter(iter->second->writer_);
 		delete iter->second;
+		delete iter->second->writer_listener_;
 		iter->second = nullptr;
 	}
 	if(publisher_ != nullptr)participant_->delete_publisher(publisher_);
@@ -93,6 +114,7 @@ bool Bundle::addWriter(string name, string config, DataWriterListener* listener,
 		cout<<"addWriter Fail: writer init fail"<<endl;
 		return false;
 	}
+	bunwriter->writer_listener_ = listener;
 	writers_.insert(pair<string, BunWriter*>(name,bunwriter));
 	return true;
 }
@@ -114,6 +136,7 @@ bool Bundle::addReader(string name, string topicName, string typeName, string co
 		cout<<"addReader Fail: reader init fail"<<endl;
 		return false;
 	}
+	tmp->reader_listener_ = listener;
 	readers_.insert(pair<string, BunReader*>(name,tmp));
 	return true;
 }
@@ -124,7 +147,7 @@ return nullptr;
 }
 return iter->second;
 }
-bool Bundle::send(string name,GeneralWriterListener* listener){
+/*bool Bundle::send(string name,GeneralWriterListener* listener){
 	map<string, BunWriter*>::iterator iter = writers_.find(name);
 	if(iter == writers_.end()){
 		cout<<"send Fail: no such writer: "<<name<<endl;
@@ -138,4 +161,4 @@ bool Bundle::send(string name,GeneralWriterListener* listener){
 		cout<<"send Fail: no matched reader"<<endl;
 		return false;
 	}
-}
+}*/

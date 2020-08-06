@@ -79,7 +79,7 @@
         (void)reader, (void)info;
         std::cout << "A data sample was lost and will not be received" << std::endl;
     }
-/*
+
      void CliSerReaderListener::on_data_available(
             DataReader* reader)
     {
@@ -155,7 +155,7 @@
     {
         (void)reader, (void)info;
         std::cout << "A data sample was lost and will not be received" << std::endl;
-    }*/
+    }
      void GeneralWriterListener::on_publication_matched(
             DataWriter* writer,
             const PublicationMatchedStatus& info)

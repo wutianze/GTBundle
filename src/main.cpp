@@ -115,16 +115,23 @@ string roleS(argv[1]);
 }*/
 
 if(roleS == "server"){
-	/*
+	
 cout<<"server here"<<endl;
-shared_ptr<Bundle> c(new Bundle("ser_participant"));
+Bundle* c=new Bundle("ser_participant");
 c->addTopic("SerCli0","SerCli");
+c->addTopic("CliSer0","CliSer");
 
 GeneralWriterListener* wl=new GeneralWriterListener();
-	c->addWriter("serclipub","SerCli0","SerCli","serclipub0_datawriter",wl);
-CliSerReaderListener* rl = new CliSerReaderListener();
+	SerCliWriter* scw = new SerCliWriter("SerCli0","SerCli");
+	c->addWriter("serclipub","serclipub0_datawriter",wl,scw);
+CliSerReaderListener*rl=new CliSerReaderListener();
 c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",rl);
-*/
+(scw->message_).seq(1);
+while(!scw->send()){}
+(scw->message_).seq(3);
+while(!scw->send()){}
+delete c;
+
 }else{
 cout<<"client here"<<endl;
 Bundle* c = new Bundle("cli_participant");
@@ -157,8 +164,6 @@ r0.join();
 as->CloseConnect(0);
 cout<<"close connect finished"<<endl;
 delete as;
-delete wl;
-delete rl;
 delete c;
 cout<<"final delete finished"<<endl;
 }

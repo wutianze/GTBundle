@@ -82,7 +82,7 @@ vector<int>targets_;
             DataReader* reader,
             const SampleLostStatus& info);
     };
-/*class CliSerReaderListener : public DataReaderListener
+class CliSerReaderListener : public DataReaderListener
 {
 
 public:
@@ -127,7 +127,7 @@ public:
      void on_sample_lost(
             DataReader* reader,
             const SampleLostStatus& info);
-    };*/
+    };
 class GeneralWriterListener : public DataWriterListener
 {
 public:

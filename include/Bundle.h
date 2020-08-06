@@ -29,6 +29,7 @@ class BunReader{
 	public:
     DataReader* reader_;
 
+    DataReaderListener* reader_listener_;
     string topicName_;
 
     string typeName_;
@@ -42,7 +43,7 @@ cout<<"delete BunReader"<<endl;
 class BunWriter{
 	public:
     DataWriter* writer_;
-
+    DataWriterListener* writer_listener_;
     string topicName_;
 
     string typeName_;
@@ -59,6 +60,15 @@ class CliWriter:public BunWriter{
 virtual bool send();
 virtual ~CliWriter(){
     cout<<"delete CliWriter"<<endl;
+};
+};
+class SerCliWriter:public BunWriter{
+	public:
+		SerCliWriter(string tn, string tyn):BunWriter(tn,tyn){};
+	SerCli message_;
+virtual bool send();
+virtual ~SerCliWriter(){
+    cout<<"delete SerCliWriter"<<endl;
 };
 };
 class Bundle
@@ -92,6 +102,6 @@ private:
     bool addWriter(string name, string config, DataWriterListener* listener,BunWriter* bunwriter);
     bool addReader(string name, string topicName,string typeName, string config, DataReaderListener* listener);
     BunWriter* getWriter(string name);
-    bool send(string name,GeneralWriterListener*listener);
+    //bool send(string name,GeneralWriterListener*listener);
 };
 #endif
