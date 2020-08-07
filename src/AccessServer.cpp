@@ -61,11 +61,11 @@ bool AccessServer::Send(int index, string to_send){
     printf("size content: %x\n", to_send_size[j]);
 }*/
 	    if(send(conn, to_send_size, sizeof(int), 0) == -1){
-	    cout<<"server send fail"<<endl;
+	    cout<<"AccessServer send fail"<<endl;
 	    return false;
 	    }
 	    if(send(conn, to_send.c_str(), to_send.size(), 0) ==-1){
-	    cout<<"server send fail"<<endl;
+	    cout<<"AccessServer send fail"<<endl;
 	    return false;
 	    }
 return true;

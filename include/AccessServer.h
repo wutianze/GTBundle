@@ -37,6 +37,9 @@ public:
         std::cout << "Error: socket" << std::endl;
         return;
     }
+    int on = 1;
+    setsockopt( listenfd_, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on) );
+    memset( &addr_, 0, sizeof(addr_) );
     // bind
     addr_.sin_family = AF_INET;
     addr_.sin_port = htons(port);

@@ -155,7 +155,13 @@ if(cw == nullptr){
 cout<<"onMessage Writer transfer wrong"<<endl;
 return;
 }
-(cw->message_).seq(2);
+Document document;
+if(document.Parse(msg.c_str()).HasParseError()){
+cout<<"json Parse error"<<endl;
+return;
+}
+
+(cw->message_).seq(document["seq"].GetInt());
 cw->send();
 };
 thread r0 = as->CreateReader(as->Accept(),c->getWriter("clipub"),onMessage);
