@@ -145,7 +145,11 @@ CliReaderListener*rl=new CliReaderListener();
 
 AccessServer* as=new AccessServer(8000);
 
+int to_send_conn = as->Accept();
 rl->setSocketServer(as);
+vector<int>targets;
+targets.push_back(to_send_conn);
+rl->setSocketTarget(targets);
 c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",rl);
 
 auto onMessage = [](string msg,BunWriter* bw){
@@ -164,7 +168,7 @@ return;
 (cw->message_).seq(document["seq"].GetInt());
 cw->send();
 };
-thread r0 = as->CreateReader(as->Accept(),c->getWriter("clipub"),onMessage);
+thread r0 = as->CreateReader(to_send_conn,c->getWriter("clipub"),onMessage);
 //as->Send(0,"1234567");
 r0.join();
 as->CloseConnect(0);

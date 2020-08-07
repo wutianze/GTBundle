@@ -117,6 +117,7 @@ ReceiveClient rThread = new ReceiveClient();
 	 rThread.setRrun(rR);
 	 Thread thread = new Thread(rThread);
 	 thread.start();
+	 System.out.println("new Reader created");
 	 return thread;
 }
 }
