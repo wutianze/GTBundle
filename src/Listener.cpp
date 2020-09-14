@@ -12,7 +12,8 @@
                     std::cout << " with seq: " << message_.seq()//<<" with key: "<<message_.kk()
                                 << " samples:" <<samples_<<std::endl;
 		    for(auto target : targets_){
-		    as_->Send(target,"send from listener!");
+		    ac_->Send(target,"send from listener!");
+		    //as_->Send(target,"send from listener!");
 		    
 		    }
 		}

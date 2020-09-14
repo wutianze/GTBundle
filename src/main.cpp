@@ -22,6 +22,7 @@
 #include<thread>
 #include<atomic>
 #include"AccessServer.h"
+#include"AccessClient.h"
 #define TEST
 using namespace std;
 using namespace rapidjson;
@@ -132,7 +133,7 @@ while(!scw->send()){}
 while(!scw->send()){}
 delete c;
 
-}else{
+}else if(roleS == "client"){
 cout<<"client here"<<endl;
 Bundle* c = new Bundle("cli_participant");
 c->addTopic("SerCli0","SerCli");
@@ -176,6 +177,40 @@ cout<<"close connect finished"<<endl;
 delete as;
 delete c;
 cout<<"final delete finished"<<endl;
+}else{//for test
+cout<<"strat test"<<endl;
+AccessClient* ac=new AccessClient(8090);
+ac->Connect(0);
+//ac->Send(0,"from client");
+int tmp_conn = ac->GetConn(0);
+while (true) {
+	int toRec;
+	int len = recv(tmp_conn,&toRec,sizeof(toRec),0);
+	if(len <=0){
+	cout<<"server recv fail"<<endl;
+	break;
+	}
+	cout<<"recv int:"<<toRec<<endl;
+
+	        char buf[toRec+1];
+            memset(buf, 0, sizeof(buf));
+            int bytesLeft = toRec;
+	    char* ptr = buf;
+	    while(bytesLeft>0){
+	    int len = recv(tmp_conn, ptr, bytesLeft, 0);
+	    bytesLeft-=len;
+	    ptr+=len;
+	    std::cout<<"recv len:"<<len<<std::endl;
+	    buf[toRec] = '\0';
+	    }
+		std::cout <<"rec content:"<< buf<<std::endl;
+	    if (strcmp(buf, "exit") == 0) {
+                std::cout << "...disconnect " << std::endl;
+		//ifcon_ = false;
+		break;
+        }
+}
+delete ac;
 }
 
 #endif
