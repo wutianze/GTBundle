@@ -25,5 +25,5 @@ java Test 127.0.0.1 8000
 host client\[access client <-> access server <-> bundle client\] <-> host server\[bundle server, bundle client\] <-> host controller\[bundle server\]
 
 # docker usage
-docker pull sauronwu/gtbundle:v1.1
+docker pull sauronwu/gtbundle:v1.1  
 docker run -p 5100:5100 gtbundle:vxx; no change in config/profiles.xml
