@@ -14,7 +14,8 @@ make
 # run
 - bundle  
 cd build  
-./bundle server/client/controller  
+./bundle server/client/controller
+(for test): ./bundle test
 - access java  
 cd access/java/  
 javac -d bin/ src/*java  
