@@ -95,7 +95,14 @@ cout<<"CLIENT1"<<clientElement->FirstAttribute()->Next()->Value()<<endl;
 //cout<<"http server up"<<endl;
 //string roleS(roleElement->GetText());
 string roleS(argv[1]);
-/*if(roleS == "server"){
+/*
+string clientMode;
+if(argc<=2){
+clientMode = "sock_server";
+}else{
+clientMode = string(argv[2]);// sock_server or sock_client
+}
+if(roleS == "server"){
 	cout<<"server run"<<endl;
 	shared_ptr<SerCliPub> server(new SerCliPub());
 	if(!server->init()){
@@ -179,7 +186,7 @@ delete c;
 cout<<"final delete finished"<<endl;
 }else{//for test
 cout<<"strat test"<<endl;
-AccessClient* ac=new AccessClient(8090);
+AccessClient* ac=new AccessClient("10.110.1.199",8090);
 ac->Connect(0);
 //ac->Send(0,"from client");
 int tmp_conn = ac->GetConn(0);

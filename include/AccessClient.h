@@ -30,7 +30,7 @@ private:
 	atomic_bool ifcon_;
 	vector<int>conn_;
 public:
-	AccessClient(int port){
+	AccessClient(string ip_addr, int port){
 // socket
     clientfd_ = socket(PF_INET, SOCK_STREAM, 0);
     if (clientfd_ == -1) {
@@ -42,14 +42,14 @@ public:
     // bind
     addr_.sin_family = AF_INET;
     addr_.sin_port = htons(port);
-    addr_.sin_addr.s_addr = inet_addr("10.37.5.104");
+    addr_.sin_addr.s_addr = inet_addr(ip_addr.c_str());
     /*if (inet_pton(AF_INET,ip_,&addr_.sin_addr)<=0) {
         std::cout << "Error: inet_pton" << std::endl;
         return;
     }*/
     // listen
     
-    cout<<"start client"<<endl;
+    cout<<"start socket client"<<endl;
 
 }
 ~AccessClient(){
