@@ -27,7 +27,7 @@ host client\[access client <-> access server <-> bundle client\] <-> host server
 
 # docker usage
 docker pull sauronwu/gtbundle:v1.1  
-docker run -it -p 5100:5100 gtbundle:v1.1 /bin/bash
+docker run -it -p 5100:5100 sauronwu/gtbundle:v1.1 /bin/bash
 
 # DDS configure
 -如果你不是总线
