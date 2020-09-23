@@ -30,5 +30,7 @@ docker pull sauronwu/gtbundle:v1.1
 docker run -it -p 5100:5100 sauronwu/gtbundle:v1.1 /bin/bash
 
 # DDS configure
--如果你不是总线
-修改config/profiles.xml，clipub_transport字段的wan_addr地址改为容器的公网ip，cli_participant字段中第一个locator同样改为容器的公网ip第二个locator字段中的ip和端口改为消息总线DDS提供的ip和端口，目前是152.136.134.100和5100
+-如果你不是总线  
+修改config/profiles.xml，clipub_transport字段的wan_addr地址改为容器的公网ip（host ip），cli_participant字段中第一个locator同样改为容器的公网ip第二个locator字段中的ip和端口改为消息总线DDS提供的ip和端口，目前是152.136.134.100和5100
+-如果你是总线  
+修改serpub_transport字段的wan_addr，ser_participant中的locator类似修改，加入所有已知的DDS client的ip和port
