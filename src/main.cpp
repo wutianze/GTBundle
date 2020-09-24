@@ -138,6 +138,9 @@ c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",rl);
 while(!scw->send()){}
 (scw->message_).seq(3);
 while(!scw->send()){}
+while(true){
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	}
 delete c;
 
 }else if(roleS == "client"){
