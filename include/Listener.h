@@ -94,6 +94,8 @@ class CliSerReaderListener : public DataReaderListener
 public:
     CliSer message_;
     atomic_int samples_;
+    AccessServer* as_;
+    int target_;
 
     CliSerReaderListener()
     : DataReaderListener()
@@ -106,6 +108,12 @@ public:
     {
 	    cout<<"delete CliSerReaderListener"<<endl;
     };
+void setSocketServer(AccessServer* as){
+    as_ = as;
+    }
+    void setSocketTarget(int target){
+    target_ = target;
+    }
 
      void on_data_available(
             DataReader* reader);

@@ -92,7 +92,9 @@
 		    if (info.instance_state == ALIVE)
                 {
                     samples_++;
-                    std::cout << "receive from client: "<<message_.seq()<<std::endl;
+                    std::cout << "receive from client seq: "<<message_.seq()<<", content: "<<message_.com()<<std::endl;
+		    as_->Send(target_,message_.com());
+
 		    		}
             }
     }

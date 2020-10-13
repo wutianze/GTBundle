@@ -90,7 +90,6 @@ clientElement = clientElement->NextSiblingElement();
 cout<<"CLIENT1"<<clientElement->FirstAttribute()->Next()->Value()<<endl;
 */
 
-#ifdef TEST
 //Http::listenAndServe<HelloHandler>(Pistache::Address("*:9080"));
 //cout<<"http server up"<<endl;
 //string roleS(roleElement->GetText());
@@ -130,17 +129,46 @@ c->addTopic("SerCli0","SerCli");
 c->addTopic("CliSer0","CliSer");
 
 GeneralWriterListener* wl=new GeneralWriterListener();
-	SerCliWriter* scw = new SerCliWriter("SerCli0","SerCli");
-	c->addWriter("serclipub","serclipub0_datawriter",wl,scw);
+	SerCliWriter* sercw = new SerCliWriter("SerCli0","SerCli");
+	c->addWriter("serclipub","serclipub0_datawriter",wl,sercw);
 CliSerReaderListener*rl=new CliSerReaderListener();
+AccessServer* as=new AccessServer(8000);
+int to_send_conn = as->Accept();
+rl->setSocketTarget(to_send_conn);
+
 c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",rl);
-(scw->message_).seq(1);
-while(!scw->send()){}
-(scw->message_).seq(3);
-while(!scw->send()){}
+auto onMessage = [](string msg,BunWriter* bw){
+cout<<"in onMessage:"<<msg<<endl;
+SerCliWriter* scw =dynamic_cast<SerCliWriter*>(bw);
+if(scw == nullptr){
+cout<<"onMessage Writer transfer wrong"<<endl;
+return;
+}
+Document document;
+if(document.Parse(msg.c_str()).HasParseError()){
+cout<<"json Parse error"<<endl;
+return;
+}
+
+(scw->message_).seq(document["seq"].GetInt());
+scw->send();
+};
+thread r0 = as->CreateReader(to_send_conn,c->getWriter("serclipub"),onMessage);
+//as->Send(0,"1234567");
+r0.join();
+as->CloseConnect(0);
+/*
+int send_test=0;
 while(true){
+(scw->message_).seq(send_test);
+send_test = (send_test+1)%999999999;
+(scw->message_).com("{latency:10,ip:0.0.0.0}");
+if(scw->send()){
+cout<<"server test send success\n";
+}
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
+*/
 delete c;
 
 }else if(roleS == "client"){
@@ -153,7 +181,13 @@ GeneralWriterListener* wl=new GeneralWriterListener();
 CliWriter* cliw = new CliWriter("CliSer0","CliSer");
 	c->addWriter("clipub","clipub0_datawriter",wl,cliw);
 CliReaderListener*rl=new CliReaderListener();
+/*
+while(true){
+	cliw->send();
 
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+}
+*/
 AccessServer* as=new AccessServer(8000);
 
 int to_send_conn = as->Accept();
@@ -162,7 +196,6 @@ vector<int>targets;
 targets.push_back(to_send_conn);
 rl->setSocketTarget(targets);
 c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",rl);
-
 auto onMessage = [](string msg,BunWriter* bw){
 cout<<"in onMessage:"<<msg<<endl;
 CliWriter* cw =dynamic_cast<CliWriter*>(bw);
@@ -187,7 +220,7 @@ cout<<"close connect finished"<<endl;
 delete as;
 delete c;
 cout<<"final delete finished"<<endl;
-}else{//for test
+}/*else{//for test
 cout<<"strat test"<<endl;
 AccessClient* ac=new AccessClient("10.110.1.199",8090);
 ac->Connect(0);
@@ -221,9 +254,8 @@ while (true) {
         }
 }
 delete ac;
-}
+}*/
 
-#endif
 
 return 0;
 }
