@@ -18,7 +18,7 @@ cd build
 
 - java socket client demo #运行socket client，各个部门测试时这里的java应该是各自实现的，端口目前都是8000  
 cd access/java/  
-javac -d bin/ src/*java  
+javac -d bin/ -classpath ./src/fastjson-1.2.74.jar ./src/*.java  
 cd bin  
 java Test 127.0.0.1 8000  
 
