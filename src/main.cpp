@@ -195,9 +195,10 @@ rl->setSocketServer(as);
 vector<int>targets;
 targets.push_back(to_send_conn);
 rl->setSocketTarget(targets);
-c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",rl);
+c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",rl);// rl receive from dds server and transfer the msg to java client
+
 auto onMessage = [](string msg,BunWriter* bw){
-cout<<"in onMessage:"<<msg<<endl;
+cout<<"received from local java client:"<<msg<<endl;
 CliWriter* cw =dynamic_cast<CliWriter*>(bw);
 if(cw == nullptr){
 cout<<"onMessage Writer transfer wrong"<<endl;
@@ -209,12 +210,13 @@ cout<<"json Parse error"<<endl;
 return;
 }
 
-(cw->message_).seq(document["seq"].GetInt());
+(cw->message_).seq(0);// no use currently
+(cw->message_).content(msg);// content is the GeneratorJSON
 cw->send();
 };
 thread r0 = as->CreateReader(to_send_conn,c->getWriter("clipub"),onMessage);
-//as->Send(0,"1234567");
 r0.join();
+
 as->CloseConnect(0);
 cout<<"close connect finished"<<endl;
 delete as;

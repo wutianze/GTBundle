@@ -2,24 +2,28 @@ import java.net.*;
 import java.io.*;
 
 interface ReaderRun{
-void onMessage(String msg);
+void onMessage(String msg, Status sS);
 }
 class ReceiveClient implements Runnable{
-private DataInputStream in;
+private JavaAccess jA;
 private ReaderRun rrun;
-public void setIn(DataInputStream ins){
-this.in = ins;
+public Status sharedStatus;
+public void setJa(JavaAccess j){
+this.jA = j;
 }
 public void setRrun(ReaderRun rr){
 this.rrun = rr;
 }
+public void setStatus(Status sS){
+this.sharedStatus = sS;
+}
 public void run(){
-	try{
 while(true){         
+	try{
 int rec_size=0;
 	 byte[] rec_s = new byte[4];
          int len0;
-	 if((len0 = this.in.read(rec_s))!=-1){
+	 if((len0 = this.jA.in.read(rec_s))!=-1){
 	 rec_size = JavaAccess.bytes2Int(rec_s);
 	 System.out.println("len0:"+len0+" rec_size:"+rec_size);
 	 }else{
@@ -27,20 +31,24 @@ int rec_size=0;
 	 }
 
 	 byte[] bytes = new byte[rec_size];
-    this.in.readFully(bytes);
+    this.jA.in.readFully(bytes);
     String content = new String(bytes, 0, rec_size,"UTF-8");
       System.out.println("respond content:"+content);
-	this.rrun.onMessage(content);
+	this.rrun.onMessage(content,this.sharedStatus);
 }
-	}catch(SocketException e){
-      System.out.println("reader exception");
-	return;
-	}catch(Exception e)
+catch(Exception e)
       {
          e.printStackTrace();
-      System.out.println("reader exception");
+      System.out.println("reader exception,try reconnecting");
+if(this.jA.reconnect(jA.serverName,jA.port)){
+      System.out.println("reconnecting success");
+      continue;
+}else{
+      System.out.println("reconnecting fail, exit");
 	 return;
+}
       }
+	}
 }
 }
 public class JavaAccess{
@@ -60,10 +68,14 @@ public static int bytes2Int(byte[] b) {
 	            (b[3] & 0xFF) << 24;
 	}
 private Socket conn;
-private DataOutputStream out;
-private DataInputStream in;
-public JavaAccess(String serverName, int port){
+public DataOutputStream out;
+public DataInputStream in;
+public String serverName;
+public int port;
+public JavaAccess(String sN, int p){
 	try{
+		serverName = sN;
+		port = p;
 	System.out.println("connect to server:" + serverName + ", port:" + port);
          conn = new Socket(serverName, port);
          System.out.println("remote address:" + conn.getRemoteSocketAddress());
@@ -74,11 +86,11 @@ public JavaAccess(String serverName, int port){
 	 e.printStackTrace();
 	 }
 }
-public boolean reconnect(String serverName, int port){
+public boolean reconnect(String sN,int p){
 	try{
 		conn.close();
-	System.out.println("connect to server:" + serverName + ", port:" + port);
-         conn = new Socket(serverName, port);
+	System.out.println("reconnect to server:" + sN + ", port:" + p);
+         conn = new Socket(sN, p);
          System.out.println("remote address:" + conn.getRemoteSocketAddress());
          
          out = new DataOutputStream(conn.getOutputStream());
@@ -101,7 +113,7 @@ return false;
 public boolean send(String jsonString){
 	try{
 	byte[] tmp = jsonString.getBytes("UTF-8");
-      	//System.out.println("bytes len:"+tmp.length);
+      	System.out.println("send bytes len:"+tmp.length);
          out.write(int2Bytes(tmp.length));
          out.write(tmp);
 	 return true;
@@ -111,10 +123,10 @@ return false;
 }
 }
 
-public Thread createReader(ReaderRun rR){
+public Thread createReader(ReaderRun rR,Status s){
 ReceiveClient rThread = new ReceiveClient();
-	 rThread.setIn(in);
-	 rThread.setRrun(rR);
+rThread.setJa(this);	 
+rThread.setRrun(rR);
 	 Thread thread = new Thread(rThread);
 	 thread.start();
 	 System.out.println("new Reader created");

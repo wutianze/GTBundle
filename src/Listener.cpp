@@ -9,11 +9,9 @@
 		    if (info.instance_state == ALIVE)
                 {
                     samples_++;
-                    std::cout << " with seq: " << message_.seq()//<<" with key: "<<message_.kk()
-                                << " samples:" <<samples_<<std::endl;
+                    std::cout << "listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
 		    for(auto target : targets_){
-		    //ac_->Send(target,"send from listener!");
-		    as_->Send(target,"send from listener!");
+		    as_->Send(target,message_.com());// com is the ControllerJSON
 		    
 		    }
 		}
@@ -92,8 +90,8 @@
 		    if (info.instance_state == ALIVE)
                 {
                     samples_++;
-                    std::cout << "receive from client seq: "<<message_.seq()<<", content: "<<message_.com()<<std::endl;
-		    as_->Send(target_,message_.com());
+                    std::cout << "listener receive from dds client seq: "<< message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
+		    as_->Send(target_,message_.com());// com is the GeneratorJSON 
 
 		    		}
             }
