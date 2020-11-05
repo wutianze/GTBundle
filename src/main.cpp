@@ -135,26 +135,27 @@ CliSerReaderListener*rl=new CliSerReaderListener();
 AccessServer* as=new AccessServer(8000);
 int to_send_conn = as->Accept();
 rl->setSocketTarget(to_send_conn);
-
 c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",rl);
+
 auto onMessage = [](string msg,BunWriter* bw){
-cout<<"in onMessage:"<<msg<<endl;
+cout<<"receive from java client in Controller side:"<<msg<<endl;
 SerCliWriter* scw =dynamic_cast<SerCliWriter*>(bw);
 if(scw == nullptr){
 cout<<"onMessage Writer transfer wrong"<<endl;
 return;
 }
-Document document;
+/*Document document;
 if(document.Parse(msg.c_str()).HasParseError()){
 cout<<"json Parse error"<<endl;
 return;
-}
+}*/
 
-(scw->message_).seq(document["seq"].GetInt());
+(scw->message_).seq(1);
+(scw->message_).com(msg);// content is the GeneratorJSON
 scw->send();
 };
 thread r0 = as->CreateReader(to_send_conn,c->getWriter("serclipub"),onMessage);
-//as->Send(0,"1234567");
+
 r0.join();
 as->CloseConnect(0);
 /*
@@ -198,20 +199,21 @@ rl->setSocketTarget(targets);
 c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",rl);// rl receive from dds server and transfer the msg to java client
 
 auto onMessage = [](string msg,BunWriter* bw){
-cout<<"received from local java client:"<<msg<<endl;
+cout<<"received from local java client in Generator side:"<<msg<<endl;
 CliWriter* cw =dynamic_cast<CliWriter*>(bw);
 if(cw == nullptr){
 cout<<"onMessage Writer transfer wrong"<<endl;
 return;
 }
+/*
 Document document;
 if(document.Parse(msg.c_str()).HasParseError()){
 cout<<"json Parse error"<<endl;
 return;
-}
+}*/
 
 (cw->message_).seq(0);// no use currently
-(cw->message_).content(msg);// content is the GeneratorJSON
+(cw->message_).com(msg);// content is the GeneratorJSON
 cw->send();
 };
 thread r0 = as->CreateReader(to_send_conn,c->getWriter("clipub"),onMessage);
