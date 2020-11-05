@@ -127,6 +127,7 @@ public Thread createReader(ReaderRun rR,Status s){
 ReceiveClient rThread = new ReceiveClient();
 rThread.setJa(this);	 
 rThread.setRrun(rR);
+rThread.setStatus(s);
 	 Thread thread = new Thread(rThread);
 	 thread.start();
 	 System.out.println("new Reader created");

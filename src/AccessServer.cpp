@@ -26,7 +26,7 @@ thread AccessServer::CreateReader(int index,BunWriter* bw, void(*function)(strin
 	int toRec;
 	int len = recv(tmp_conn,&toRec,sizeof(toRec),0);
 	if(len <=0){
-	cout<<"server recv fail"<<endl;
+	cout<<"AccessServer server recv fail"<<endl;
 	break;
 	}
 	cout<<"recv int:"<<toRec<<endl;

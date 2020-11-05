@@ -17,6 +17,12 @@ public class Generator
 Thread readerT = jA.createReader((String msg,Status sS)->{
 System.out.println("receive controller msg:"+msg);
 ControllerJSON cj = JSON.parseObject(msg,ControllerJSON.class);
+if(sS == null){
+System.out.println("sS null"+msg);
+}
+if(cj == null){
+System.out.println("cj null"+msg);
+}
 sS.set(cj.getId());
 },sharedStatus);
 int countNow = 0;
