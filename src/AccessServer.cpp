@@ -55,11 +55,9 @@ thread AccessServer::CreateReader(int index,BunWriter* bw, void(*function)(strin
 bool AccessServer::Send(int index, string to_send){
     int conn = conn_[index];
 	char to_send_size[4];
-	    int tss = to_send.size();
+	int tss = to_send.size();
+	    cout<<"AccessServer::Send, to_send size:"<<tss<<endl;
 	    memcpy(to_send_size,&tss,sizeof(int));
-/*for (int j = 0; j < 4; j++){
-    printf("size content: %x\n", to_send_size[j]);
-}*/
 	    if(send(conn, to_send_size, sizeof(int), 0) == -1){
 	    cout<<"AccessServer send fail"<<endl;
 	    return false;

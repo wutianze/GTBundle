@@ -6,9 +6,9 @@
 				<transport_id>clipub_transport</transport_id>
 				<type>TCPv4</type>
 				<listening_ports>
-					<port>5100</port>
+					<port>5101</port>
 				</listening_ports>
-				<wan_addr>152.136.134.100</wan_addr>
+				<wan_addr>199.19.226.47</wan_addr>
 			</transport_descriptor>
 			<transport_descriptor>
 				<transport_id>serpub_transport</transport_id>
@@ -35,7 +35,7 @@
 			<rtps>
 				<userTransports>
 					<transport_id>sub_transport</transport_id>
-					<transport_id>clipub_transport</transport_id>
+					<!--transport_id>clipub_transport</transport_id-->
 					<transport_id>default_transport</transport_id>
 				</userTransports>
 				<useBuiltinTransports>false</useBuiltinTransports>
@@ -49,8 +49,8 @@
 						</locator>
 						<locator>
 							<tcpv4>
-								<address>152.136.134.100</address>
-								<physical_port>5100</physical_port>
+								<address>39.101.140.145</address>
+								<physical_port>5101</physical_port>
 							</tcpv4>
 						</locator>
 					</initialPeersList>
@@ -70,13 +70,13 @@
 					<initialPeersList>
 						<locator>
 							<tcpv4>
-								<address>39.101.140.145</address>
+								<address>152.136.134.100</address>
 								<physical_port>5100</physical_port>
 							</tcpv4>
 						</locator>
 						<locator>
 							<tcpv4>
-								<address>152.136.134.100</address>
+								<address>199.19.226.47</address>
 								<physical_port>5100</physical_port>
 							</tcpv4>
 						</locator>

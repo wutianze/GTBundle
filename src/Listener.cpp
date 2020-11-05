@@ -92,7 +92,7 @@
                     samples_++;
                     std::cout << "listener receive from dds client seq: "<< message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
 		    as_->Send(target_,message_.com());// com is the GeneratorJSON 
-
+		std::cout<<"as_ send finish\n";
 		    		}
             }
     }

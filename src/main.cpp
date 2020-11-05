@@ -134,9 +134,9 @@ GeneralWriterListener* wl=new GeneralWriterListener();
 CliSerReaderListener*rl=new CliSerReaderListener();
 AccessServer* as=new AccessServer(8000);
 int to_send_conn = as->Accept();
+rl->setSocketServer(as);
 rl->setSocketTarget(to_send_conn);
 c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",rl);
-
 auto onMessage = [](string msg,BunWriter* bw){
 cout<<"receive from java client in Controller side:"<<msg<<endl;
 SerCliWriter* scw =dynamic_cast<SerCliWriter*>(bw);

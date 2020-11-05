@@ -16,7 +16,7 @@ include_directories("include")
 if(NOT fastcdr_FOUND)
     find_package(fastcdr REQUIRED)
 endif()
-find_package(Pistache 0.0.2 REQUIRED)
+#find_package(Pistache 0.0.2 REQUIRED)
 
 if(NOT fastrtps_FOUND)
     find_package(fastrtps REQUIRED)
