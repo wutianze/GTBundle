@@ -26,8 +26,8 @@ java Test 127.0.0.1 8000
 host client\[access client <-> access server <-> bundle client\] <-> host server\[bundle server, bundle client\] <-> host controller\[bundle server\]
 
 # docker usage
-docker pull sauronwu/gtbundle:v1.1  
-docker run -it -p 5100:5100 sauronwu/gtbundle:v1.1 /bin/bash
+docker pull sauronwu/gtbundle:v1.2  
+docker run -it -p 5100:5100 sauronwu/gtbundle:v1.2 /bin/bash
 
 # DDS configure
 -如果你不是总线  
