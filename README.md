@@ -1,7 +1,13 @@
 # GTBundle
 
+# 需要安装的库
+1. cmake >= 3.12: https://github.com/Kitware/CMake/releases/download/v3.18.4/cmake-3.18.4.tar.gz
+
 # init（凡是使用docker容器的都需要进行这一步）
 source script/setup.sh
+
+./script/generateIDL.sh SerCli # 生成新的message type
+./script/generateIDL.sh CliSer
 
 mkdir build # or clear the build dir
 
