@@ -22,8 +22,8 @@
 `cd access/java/`  
 `javac -d bin/ -classpath ./src/fastjson-1.2.74.jar ./src/*.java`  
 `cd bin # 注意在demo测试时，先启动非总控侧的java程序再启动总控侧的，总控侧的一启动就会发送一条命令要求各个部门上报数据`  
-`java Generator 127.0.0.1 8000 1000 1000 # 在非总控侧，运行Generator来产生数据，前两个参数指定ip和端口，第3个参数指定循环次数，第4个参数指定每次循环间隔的ms数`
-`java Generator 127.0.0.1 8000 1000 1000 # 在总控侧，运行Controller来收消息以及发布命令，参数同上`
+`java -cp ../src/fastjson-1.2.74.jar: Generator 127.0.0.1 8000 1000 1000 # 在非总控侧，运行Generator来产生数据，前两个参数指定ip和端口，第3个参数指定循环次数，第4个参数指定每次循环间隔的ms数`
+`java -cp ../src/fastjson-1.2.74.jar: Controller 127.0.0.1 8000 1000 1000 # 在总控侧，运行Controller来收消息以及发布命令，参数同上`
 
 # structure
 host client\[access client <-> access server <-> bundle client\] <-> host server\[bundle server, bundle client\] <-> host controller\[bundle server\]
