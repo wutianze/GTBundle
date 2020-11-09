@@ -7,10 +7,10 @@
 4. 推荐使用ubuntu >= 18.04
 
 # init（凡是使用docker容器的都需要进行这一步）
-`source script/setup.sh
-mkdir build # or clear the build dir
-cd build
-cmake ..
+`source script/setup.sh  
+mkdir build # or clear the build dir  
+cd build  
+cmake ..  
 make`
 
 # run
