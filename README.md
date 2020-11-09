@@ -7,22 +7,22 @@
 4. 推荐使用ubuntu >= 18.04
 
 # init（凡是使用docker容器的都需要进行这一步）
-`source script/setup.sh  
-mkdir build # or clear the build dir  
-cd build  
-cmake ..  
-make`
+`source script/setup.sh`  
+`mkdir build # or clear the build dir`  
+`cd build`  
+`cmake ..`    
+`make`
 
 # run
 - bundle #运行bundle  
-`cd build  
-./bundle server/client`
+`cd build`  
+`./bundle server/client`
 
 - java socket client demo #运行socket client，各个部门测试时这里的java应该是各自实现的，端口目前都是8000  
-`cd access/java/  
-javac -d bin/ -classpath ./src/fastjson-1.2.74.jar ./src/*.java  
-cd bin  
-java Test 127.0.0.1 8000`
+`cd access/java/`  
+`javac -d bin/ -classpath ./src/fastjson-1.2.74.jar ./src/*.java`  
+`cd bin`  
+`java Test 127.0.0.1 8000`
 
 # structure
 host client\[access client <-> access server <-> bundle client\] <-> host server\[bundle server, bundle client\] <-> host controller\[bundle server\]
@@ -31,8 +31,8 @@ host client\[access client <-> access server <-> bundle client\] <-> host server
 `./script/generateIDL.sh SerCli`
 
 # docker usage
-`docker pull sauronwu/gtbundle:v1.2 # 如果是arm版本则docker pull sauronwu/gtbundle_arm:v1.0
-docker run -it -p 5100:5100 sauronwu/gtbundle:v1.2 /bin/bash`
+`docker pull sauronwu/gtbundle:v1.2 # 如果是arm版本则docker pull sauronwu/gtbundle_arm:v1.0`  
+`docker run -it -p 5100:5100 sauronwu/gtbundle:v1.2 /bin/bash`
 
 # DDS configure
 -如果你不是总线  
