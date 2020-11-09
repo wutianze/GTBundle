@@ -23,14 +23,20 @@ System.out.println("sS null"+msg);
 if(cj == null){
 System.out.println("cj null"+msg);
 }
-sS.set(cj.getId());
+if((cj.getContent()).equals("report"))
+{
+	sS.set(1);
+}else if((cj.getContent()).equals("control")){
+	sS.set(2);
+}
 },sharedStatus);
 int countNow = 0;
 while(countNow<count){
+	long currentTime=System.currentTimeMillis();
 	if(sharedStatus.check() == 1){
-jA.send("{\"seq\":"+String.valueOf(countNow)+",\"delay\":10,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
+jA.send("{\"id\":0,\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
 	}else if(sharedStatus.check() == 2){
-jA.send("{\"seq\":"+String.valueOf(countNow)+",\"delay\":10,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
+jA.send("{\"id\":0,\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
 sharedStatus.set(1);
 	}
 	countNow++;

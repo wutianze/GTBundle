@@ -1,5 +1,7 @@
 public class GeneratorJSON{
+private long id;
 private long seq;
+private long timestamp;
 private double delay;
 private String content;
 private int status;
@@ -8,6 +10,18 @@ return seq;
 }
 public void setSeq(long seq){
 this.seq = seq;
+}
+public long getId(){
+return id;
+}
+public void setId(long id){
+this.id = id;
+}
+public long getTimestamp(){
+return timestamp;
+}
+public void setTimestamp(long timestamp){
+this.timestamp = timestamp;
 }
 public double getDelay(){
 return delay;

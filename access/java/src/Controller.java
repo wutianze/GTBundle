@@ -23,13 +23,15 @@ sS.set(2);//start control
 System.out.println("control trigger");
 }
 },sharedStatus);
+	long currentTime=System.currentTimeMillis();
 //start reporting
-jA.send("{\"id\":1,\"delay\":10,\"content\":\"testing\"}");
+jA.send("{\"id\":0,\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10,\"content\":\"report\"}");
 int countNow = 0;
 while(countNow<count){
+	currentTime=System.currentTimeMillis();
 	if(sharedStatus.check()==2){
 System.out.println("send control msg");
-jA.send("{\"id\":2,\"delay\":10,\"content\":\"testing\"}");
+jA.send("{\"id\":0,\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10,\"content\":\"control\"}");
 sharedStatus.set(1);
 	}
 	countNow++;
