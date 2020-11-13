@@ -34,9 +34,9 @@ int countNow = 0;
 while(countNow<count){
 	long currentTime=System.currentTimeMillis();
 	if(sharedStatus.check() == 1){
-jA.send("{\"id\":0,\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
+jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
 	}else if(sharedStatus.check() == 2){
-jA.send("{\"id\":0,\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
+jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
 sharedStatus.set(1);
 	}
 	countNow++;

@@ -2,14 +2,14 @@ public class ControllerJSON{
 /*
  * command id, see Status as an example, 0: stop & wait; 1: start report; 2: control command
  */
-	private long id;
+	private String id;
 	private long timestamp;
 private double delay;
 private String content;
-public long getId(){
+public String getId(){
 return id;
 }
-public void setId(long id){
+public void setId(String id){
 this.id = id;
 }
 public long getTimestamp(){
