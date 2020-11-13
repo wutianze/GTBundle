@@ -21,24 +21,18 @@
 #define TEST
 using namespace std;
 using namespace rapidjson;
+#define LINKNUM 1
 int main(int argc, char** argv){
 	string roleS(argv[1]);
 	
 	if(roleS == "server"){
 		cout<<"server here"<<endl;
 		Bundle* c=new Bundle("ser_participant");
-		c->addTopic("SerCli0","SerCli");
-		c->addTopic("CliSer0","CliSer");
-
-		GeneralWriterListener* wl=new GeneralWriterListener();
-		SerCliWriter* sercw = new SerCliWriter("SerCli0","SerCli");
-		c->addWriter("serclipub","serclipub0_datawriter",wl,sercw);
-		CliSerReaderListener*rl=new CliSerReaderListener();
-		AccessServer* as=new AccessServer(8000);
-		int to_send_conn = as->Accept();
-		rl->setSocketServer(as);
-		rl->setSocketTarget(to_send_conn);
-		c->addReader("clisersub","CliSer0","CliSer","clisersub0_datareader",rl);
+		GeneralWriterListener* wls[LINKNUM];
+		SerCliWriter* sercws[LINKNUM];
+		CliSerReaderListener* rls[LINKNUM];
+		AccessServer* ass[LINKNUM];
+		thread rts[LINKNUM];
 		auto onMessage = [](string msg,BunWriter* bw){
 			cout<<"receive from java client in Controller side:"<<msg<<endl;
 			SerCliWriter* scw =dynamic_cast<SerCliWriter*>(bw);
@@ -50,10 +44,26 @@ int main(int argc, char** argv){
 			(scw->message_).com(msg);// content is the GeneratorJSON
 			scw->send();
 		};
-		thread r0 = as->CreateReader(to_send_conn,c->getWriter("serclipub"),onMessage);
 
-		r0.join();
-		as->CloseConnect(0);
+for(int ln=0;ln<LINKNUM;ln++){
+		c->addTopic("CliSer"+to_string(ln),"CliSer");
+		c->addTopic("SerCli"+to_string(ln),"SerCli");
+		wls[ln]=new GeneralWriterListener();
+		sercws[ln] = new SerCliWriter("SerCli"+to_string(ln),"SerCli");
+		c->addWriter("serclipub","serclipub"+to_string(ln)+"_datawriter",wls[ln],sercws[ln]);
+		rls[ln]=new CliSerReaderListener();
+		ass[ln]=new AccessServer(8000+ln);
+		int to_send_conn = ass[ln]->Accept();
+		rls[ln]->setSocketServer(ass[ln]);
+		rls[ln]->setSocketTarget(to_send_conn);
+		c->addReader("clisersub","CliSer"+to_string(ln),"CliSer","clisersub"+to_string(ln)+"_datareader",rls[ln]);
+		rts[ln] = ass[ln]->CreateReader(to_send_conn,c->getWriter("serclipub"),onMessage);
+}
+for(int ln=0;ln<LINKNUM;ln++)		
+{
+	rts[ln].join();
+		ass[ln]->CloseConnect(0);
+}
 		delete c;
 
 	}else if(roleS == "client"){
