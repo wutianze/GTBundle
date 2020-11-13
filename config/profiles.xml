@@ -6,9 +6,9 @@
 				<transport_id>clipub_transport</transport_id>
 				<type>TCPv4</type>
 				<listening_ports>
-					<port>5101</port>
+					<port>5100</port>
 				</listening_ports>
-				<wan_addr>199.19.226.47</wan_addr>
+				<wan_addr>152.136.134.100</wan_addr>
 			</transport_descriptor>
 			<transport_descriptor>
 				<transport_id>serpub_transport</transport_id>
@@ -35,7 +35,7 @@
 			<rtps>
 				<userTransports>
 					<transport_id>sub_transport</transport_id>
-					<!--transport_id>clipub_transport</transport_id-->
+					<transport_id>clipub_transport</transport_id>
 					<transport_id>default_transport</transport_id>
 				</userTransports>
 				<useBuiltinTransports>false</useBuiltinTransports>

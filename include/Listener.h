@@ -33,7 +33,7 @@ public:
     SerCli message_;
     atomic_int samples_;
     AccessServer* as_;
-    AccessClient* ac_;
+    //AccessClient* ac_;
 vector<int>targets_;
 
     CliReaderListener()
@@ -50,9 +50,9 @@ vector<int>targets_;
     void setSocketServer(AccessServer* as){
     as_ = as;
     }
-    void setSocketClient(AccessClient* ac){
+    /*void setSocketClient(AccessClient* ac){
     ac_ = ac;
-    }
+    }*/
     void setSocketTarget(vector<int>& targets){
     targets_.assign(targets.begin(),targets.end());
     }
