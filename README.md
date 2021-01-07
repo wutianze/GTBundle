@@ -22,7 +22,7 @@
 `cd build`  
 `./bundle server/client #总控侧运行server，非总控侧运行client`
 
-- java socket client demo # 运行socket client，各个部门测试时这里的java应该是各自实现的，端口目前都是8000  
+- java socket client demo # 运行socket client，各个部门测试时这里的java应该是各自实现的，端口目前都是8000。注：java socket不应该在总线容器里执行，应该在各部门自己的机器或环境中执行，它和总线容器通过socket进行交互  
 `cd access/java/`  
 `javac -d bin/ -classpath ./src/fastjson-1.2.74.jar ./src/*.java`  
 `cd bin # 注意在demo测试时，先启动非总控侧的java程序再启动总控侧的，总控侧的一启动就会发送一条命令要求各个部门上报数据`  
