@@ -26,7 +26,9 @@
 `java -cp ../src/fastjson-1.2.74.jar: Controller 127.0.0.1 8000 1000 1000 # 在总控侧，运行Controller来收消息以及发布命令，参数同上`
 
 # structure
-host client\[access client <-> access server <-> bundle client\] <-> host server\[bundle server, bundle client\] <-> host controller\[bundle server\]
+- host client\[access client <-> access server <-> bundle client\] <-> host server\[bundle server, bundle client\] <-> host controller\[bundle server\]
+- 总控需要自己实现一个java client，并且部署一个总线的容器，该java client的数据和本地的总线容器交互；总线容器会负责接入总线，即和高通量、无线等部门处部署的总线容器交互；各部门同样需要自己实现一个java client并部署一个总线的容器，原理和总控的一样。
+注：部署的总线容器需要公网ip，java client和总线容器的交互可以不走公网。
 
 # generate new message type idl
 `./script/generateIDL.sh SerCli`
@@ -36,9 +38,9 @@ host client\[access client <-> access server <-> bundle client\] <-> host server
 `docker run -it -p 5100:5100 sauronwu/gtbundle:v1.2 /bin/bash`
 
 # DDS configure
--如果你不是总线  
+- 如果你不是总线  
 修改config/profiles.xml，clipub_transport字段的wan_addr地址改为容器的公网ip（host ip），cli_participant字段中需要有一个locator字段中的ip和端口改为消息总线DDS提供的ip和端口，目前是152.136.134.100和5100
--如果你是总线  
+- 如果你是总线  
 修改serpub_transport字段的wan_addr，ser_participant中的locator类似修改，加入所有已知的DDS client的ip和port
 
 # 测试（上一次更新2020.11.9）
