@@ -8,8 +8,8 @@
 `docker run -it -p 5100:5100 sauronwu/gtbundle:v1.2 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作
 
 ## init（凡是使用docker容器的都需要进行这一步）
-`cd GTBundle`
-`git pull`
+`cd GTBundle`  
+`git pull`  
 `source script/setup.sh`  
 `mkdir build # or clear the build dir`  
 `cd build`  
