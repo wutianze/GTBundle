@@ -45,7 +45,7 @@
   4. 推荐使用ubuntu >= 18.04
   5. 如果使用docker容器，则只需要对应选择x86或arm即可
 
-## 测试（上一次更新2020.11.9）
+## 测试（上一次更新2021.1.12）
 1. 第一阶段测试
   - 测试目的：各个部门本地的socket可以接入总线提供的容器，实现双向的收发消息
   - 测试方式：非总线部门使用`./bundle client`来启动容器内的socket server（localhost:8000）; 如果你的实现是socket server而不是socket client，则使用`./bundle test`来临时测试，请尽快更新至socket client；如果你是控制中心，则原则上就是总线，所以使用`./bundle server`来启动容器内的
@@ -60,4 +60,10 @@
   - 吐槽：这种需求应该在整个项目最开始时就提出，在接近完成时直接换底层平台，风险巨大，并且白白浪费了好几天的环境配置时间。
 4. 第三阶段测试
   - 测试目的：实装消息格式和交互协议
-  - 测试进程：还未开始
+  - 测试进程：消息测试样例
+      - 各部门接入总线
+      - 总控下发消息："{"id":"id0","timestamp":"2021xxx","delay":10,"content":"report"}"，含义是开始上报（report），此时id和delay字段无意义
+      - 各部门收到消息，开始周期性上报数据，以高通量为例：{"msgType":"cloud_platform_info_total","msgId":"1","msgTag":{"stationName":"盐城机房测试"},"content":{"disk_total":"0TB","ram_total":"1TB","net_band":"100G","cpu_total":"0"}}，此处消息格式各部门不一定一样。
+      - 总控下发消息："{"id":"id0","timestamp":"2021xxx","delay":10,"content":"control"}"，含义是开始控制（control），调控ID为id0的应用，使之延迟在10以内（单位自行脑补。。。）
+      - 各部门收到各自的调控指令，开始调控
+      - 调控终止：当收到消息格式为"{"id":"id0","timestamp":"2021xxx","delay":-1,"content":"control"}"，即delay为负数，则表示对应用id0的延迟要求取消
