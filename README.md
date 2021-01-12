@@ -5,7 +5,7 @@
 
 ## Docker usage
 `docker pull sauronwu/gtbundle:v1.2 # 如果是arm版本则docker pull sauronwu/gtbundle_arm:v1.0`  
-`docker run -it -p 5100:5100 sauronwu/gtbundle:v1.2 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作
+`docker run -it -p 5100:5100 -p 8000:8000 sauronwu/gtbundle:v1.2 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作，具体端口映射请根据自身需求来定
 
 ## init（凡是使用docker容器的都需要进行这一步）
 `cd GTBundle`  
