@@ -10,7 +10,7 @@
 ## init（凡是使用docker容器的都需要进行这一步）
 `cd GTBundle`  
 `git pull`  
-`source script/setup.sh`  
+`source script/setup_server.sh`# 如果你是非总控侧，则setup_client.sh    
 `mkdir build # or clear the build dir`  
 `cd build`  
 `cmake ..`    
