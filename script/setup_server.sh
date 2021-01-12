@@ -1,3 +1,6 @@
 GTPATH=`pwd`
 export GTPATH
+LINKNUM=1
+export LINKNUM
 echo GTPATH:$GTPATH
+echo LINKNUM:$LINKNUM

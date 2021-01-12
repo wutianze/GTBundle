@@ -57,7 +57,7 @@
 				</builtin>
 			</rtps>
 		</participant>
-		
+
 		<participant profile_name="ser_participant">
 			<rtps>
 				<userTransports>
@@ -91,6 +91,11 @@
 				<name>SerCli0</name>
 				<dataType>SerCli</dataType>
 			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
 		</data_writer>
 		<data_reader profile_name="clisub0_datareader">
 			<topic>
@@ -99,9 +104,9 @@
 				<dataType>SerCli</dataType>
 			</topic>
 			<qos>
-			<reliability>
-                    <kind>RELIABLE</kind>
-                </reliability>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
 			</qos>
 		</data_reader>
 		<data_writer profile_name="clipub0_datawriter">
@@ -110,6 +115,11 @@
 				<name>CliSer0</name>
 				<dataType>CliSer</dataType>
 			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
 		</data_writer>
 		<data_reader profile_name="clisersub0_datareader">
 			<topic>
@@ -118,10 +128,108 @@
 				<dataType>CliSer</dataType>
 			</topic>
 			<qos>
-			<reliability>
-                    <kind>RELIABLE</kind>
-                </reliability>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
 			</qos>
 		</data_reader>
-			</profiles>
+
+		<data_writer profile_name="serclipub1_datawriter">
+			<topic>
+				<kind>WITH_KEY</kind>
+				<name>SerCli1</name>
+				<dataType>SerCli</dataType>
+			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
+		</data_writer>
+		<data_reader profile_name="clisub1_datareader">
+			<topic>
+				<kind>WITH_KEY</kind>
+				<name>SerCli1</name>
+				<dataType>SerCli</dataType>
+			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
+		</data_reader>
+		<data_writer profile_name="clipub1_datawriter">
+			<topic>
+				<kind>WITH_KEY</kind>
+				<name>CliSer1</name>
+				<dataType>CliSer</dataType>
+			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
+		</data_writer>
+		<data_reader profile_name="clisersub1_datareader">
+			<topic>
+				<kind>WITH_KEY</kind>
+				<name>CliSer1</name>
+				<dataType>CliSer</dataType>
+			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
+		</data_reader>
+
+		<data_writer profile_name="serclipub2_datawriter">
+			<topic>
+				<kind>WITH_KEY</kind>
+				<name>SerCli2</name>
+				<dataType>SerCli</dataType>
+			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
+		</data_writer>
+		<data_reader profile_name="clisub2_datareader">
+			<topic>
+				<kind>WITH_KEY</kind>
+				<name>SerCli2</name>
+				<dataType>SerCli</dataType>
+			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
+		</data_reader>
+		<data_writer profile_name="clipub2_datawriter">
+			<topic>
+				<kind>WITH_KEY</kind>
+				<name>CliSer2</name>
+				<dataType>CliSer</dataType>
+			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
+		</data_writer>
+		<data_reader profile_name="clisersub2_datareader">
+			<topic>
+				<kind>WITH_KEY</kind>
+				<name>CliSer2</name>
+				<dataType>CliSer</dataType>
+			</topic>
+			<qos>
+				<reliability>
+					<kind>RELIABLE</kind>
+				</reliability>
+			</qos>
+		</data_reader>
+	</profiles>
 </dds>

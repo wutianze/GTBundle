@@ -18,13 +18,11 @@
 #include<atomic>
 #include"AccessServer.h"
 #include"AccessClient.h"
-#define TEST
 using namespace std;
 using namespace rapidjson;
-#define LINKNUM 1
 int main(int argc, char** argv){
 	string roleS(argv[1]);
-	
+	int LINKNUM = atoi(getenv("LINKNUM"));
 	if(roleS == "server"){
 		cout<<"server here"<<endl;
 		Bundle* c=new Bundle("ser_participant");
@@ -46,17 +44,25 @@ int main(int argc, char** argv){
 		};
 
 for(int ln=0;ln<LINKNUM;ln++){
-		c->addTopic("CliSer"+to_string(ln),"CliSer");
-		c->addTopic("SerCli"+to_string(ln),"SerCli");
+		if(!c->addTopic("CliSer"+to_string(ln),"CliSer")){
+		return -1;
+		}
+		if(!c->addTopic("SerCli"+to_string(ln),"SerCli")){
+		return -1;
+		}
 		wls[ln]=new GeneralWriterListener();
 		sercws[ln] = new SerCliWriter("SerCli"+to_string(ln),"SerCli");
-		c->addWriter("serclipub","serclipub"+to_string(ln)+"_datawriter",wls[ln],sercws[ln]);
+		if(!c->addWriter("serclipub","serclipub"+to_string(ln)+"_datawriter",wls[ln],sercws[ln])){
+		return -1;
+		}
 		rls[ln]=new CliSerReaderListener();
 		ass[ln]=new AccessServer(8000+ln);
 		int to_send_conn = ass[ln]->Accept();
 		rls[ln]->setSocketServer(ass[ln]);
 		rls[ln]->setSocketTarget(to_send_conn);
-		c->addReader("clisersub","CliSer"+to_string(ln),"CliSer","clisersub"+to_string(ln)+"_datareader",rls[ln]);
+		if(!c->addReader("clisersub","CliSer"+to_string(ln),"CliSer","clisersub"+to_string(ln)+"_datareader",rls[ln])){
+		return -1;
+		}
 		rts[ln] = ass[ln]->CreateReader(to_send_conn,c->getWriter("serclipub"),onMessage);
 }
 for(int ln=0;ln<LINKNUM;ln++)		
@@ -68,13 +74,20 @@ for(int ln=0;ln<LINKNUM;ln++)
 
 	}else if(roleS == "client"){
 		cout<<"client here"<<endl;
+		string GLOBAL_INDEX = string(getenv("GLOBAL_INDEX"));
 		Bundle* c = new Bundle("cli_participant");
-		c->addTopic("SerCli0","SerCli");
-		c->addTopic("CliSer0","CliSer");
+		if(!c->addTopic("SerCli"+GLOBAL_INDEX,"SerCli")){
+		return -1;
+		}
+		if(!c->addTopic("CliSer"+GLOBAL_INDEX,"CliSer")){
+		return -1;
+		}
 
 		GeneralWriterListener* wl=new GeneralWriterListener();
-		CliWriter* cliw = new CliWriter("CliSer0","CliSer");
-		c->addWriter("clipub","clipub0_datawriter",wl,cliw);
+		CliWriter* cliw = new CliWriter("CliSer"+GLOBAL_INDEX,"CliSer");
+		if(!c->addWriter("clipub","clipub"+GLOBAL_INDEX+"_datawriter",wl,cliw)){
+		return -1;
+		}
 		CliReaderListener*rl=new CliReaderListener();
 		
 		AccessServer* as=new AccessServer(8000);
@@ -83,7 +96,9 @@ for(int ln=0;ln<LINKNUM;ln++)
 		vector<int>targets;
 		targets.push_back(to_send_conn);
 		rl->setSocketTarget(targets);
-		c->addReader("clisub","SerCli0","SerCli","clisub0_datareader",rl);// rl receive from dds server and transfer the msg to java client
+		if(!c->addReader("clisub","SerCli"+GLOBAL_INDEX,"SerCli","clisub"+GLOBAL_INDEX+"_datareader",rl)){
+		return -1;
+		}// rl receive from dds server and transfer the msg to java client
 
 		auto onMessage = [](string msg,BunWriter* bw){
 			cout<<"received from local java client in Generator side:"<<msg<<endl;
