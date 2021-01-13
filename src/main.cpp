@@ -22,8 +22,8 @@ using namespace std;
 using namespace rapidjson;
 int main(int argc, char** argv){
 	string roleS(argv[1]);
-	int LINKNUM = atoi(getenv("LINKNUM"));
 	if(roleS == "server"){
+		int LINKNUM = atoi(getenv("LINKNUM"));
 		cout<<"server here"<<endl;
 		Bundle* c=new Bundle("ser_participant");
 		GeneralWriterListener* wls[LINKNUM];
