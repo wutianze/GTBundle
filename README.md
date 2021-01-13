@@ -31,9 +31,9 @@
 `java -cp ../src/fastjson-1.2.74.jar: Controller 127.0.0.1 8000 1000 1000 # 在总控侧，运行Controller来收消息以及发布命令，参数同上`
 
 ## DDS configure
-- 如果你不是总线  
+- 如果你不是总控（运行的是./bundle client）  
 修改config/profiles.xml，clipub_transport字段的wan_addr地址改为容器的公网ip（host ip），cli_participant字段中需要有一个locator字段中的ip和端口改为消息总线DDS提供的ip和端口  
-- 如果你是总线  
+- 如果你是总控(运行的是./bundle server)  
 修改serpub_transport字段的wan_addr，ser_participant中的locator类似修改，加入所有已知的DDS client的ip和port
 
 ## For 总线开发人员
