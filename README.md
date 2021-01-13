@@ -8,7 +8,7 @@
 `docker run -it -p 5100:5100 -p 8000:8000 sauronwu/gtbundle:v1.2 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作，具体端口映射请根据自身需求来定
 
 ## init（凡是使用docker容器的都需要进行这一步）
-`cd GTBundle`  
+`cd home/GTBundle`  
 `git pull`  
 `vi script/setup_server.sh` #修改script中的setup_\*文件, 如果你是非总控侧，则修改setup_client.sh中的GLOBAL_INDEX变量，总线会给每个部门指定单独的序号；如果你是总控，修改setup_server.sh中的LINKNUM变量，指定本次实验有多少个下属部门参与，比如本次只有无线和高通量参与联调，那么该数值为2（需要你有两个java client各负责一个部门消息的收发）  
 `source script/setup_server.sh`# 如果你是非总控则改为setup_client.sh  
