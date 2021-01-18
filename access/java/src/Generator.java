@@ -35,10 +35,8 @@ while(countNow<count){
 	long currentTime=System.currentTimeMillis();
 	if(sharedStatus.check() == 1){
 jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
-//jA.send("{\"msgType\":\"cloud_platform_info_total\",\"msgId\":\"1\",\"msgTag\":{\"stationName\":\"盐城机房测试\"},\"content\":{\"disk_total\":\"0TB\",\"ram_total\":\"1TB\",\"net_band\":\"100G\",\"cpu_total\":\"0\"}}");
 	}else if(sharedStatus.check() == 2){
 jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"testing\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
-//jA.send("{\"msgType\":\"cloud_platform_info_total\",\"msgId\":\"1\",\"msgTag\":{\"stationName\":\"盐城机房测试\"},\"content\":{\"disk_total\":\"0TB\",\"ram_total\":\"1TB\",\"net_band\":\"100G\",\"cpu_total\":\"0\"}}");
 sharedStatus.set(1);
 	}
 	countNow++;
