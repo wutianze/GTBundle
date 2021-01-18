@@ -4,8 +4,8 @@
 注：部署的总线容器需要公网ip，java client和总线容器的交互可以不走公网。
 
 ## Docker usage
-`docker pull sauronwu/gtbundle:v1.2 # 如果是arm版本则docker pull sauronwu/gtbundle_arm:v1.0`  
-`docker run -it -p 5100:5100 -p 8000:8000 sauronwu/gtbundle:v1.2 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作，具体端口映射请根据自身需求来定
+`docker pull sauronwu/gtbundle:v1.3 # 如果是arm版本则docker pull sauronwu/gtbundle_arm:v1.0`  
+`docker run -it -p 5100:5100 -p 8000:8000 sauronwu/gtbundle:v1.2 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作，具体端口映射请根据自身需求来定，但请保持容器和host的端口一致。
 
 ## init（凡是使用docker容器的都需要进行这一步）
 `cd home/GTBundle`  
@@ -46,7 +46,7 @@
   4. 推荐使用ubuntu >= 18.04
   5. 如果使用docker容器，则只需要对应选择x86或arm即可
 
-## 测试（上一次更新2021.1.15）
+## 测试（上一次更新2021.1.18）
 1. 第一阶段测试
   - 测试目的：各个部门本地的socket可以接入总线提供的容器，实现双向的收发消息
   - 测试方式：非总线部门使用`./bundle client`来启动容器内的socket server（localhost:8000）; 如果你的实现是socket server而不是socket client，则使用`./bundle test`来临时测试，请尽快更新至socket client；如果你是控制中心，则原则上就是总线，所以使用`./bundle server`来启动容器内的
@@ -69,10 +69,10 @@
       - 各部门收到各自的调控指令，开始调控
       - 调控终止：当收到消息格式为"{"id":"id0","timestamp":"2021xxx","delay":-1,"content":"control"}"，即delay为负数，则表示对应用id0的延迟要求取消
   - 测试进程：
-    - 总线分别和总控、无线、高通量完成了测试
-    - 总控和高通量实现了局域网互通，但公网存在网络问题
-    - 总控和无线实现了公网以及局域网互通，目前无线在完善控制逻辑
-    - 总控给出了消息交互规范文档
+    - 总线分别和总控、无线（接入）、高通量、骨干完成了测试
+    - 总控和高通量、无线实现了公网互通
+    - 目前无线在完善控制逻辑
+    - 总控给出了消息交互规范文档，整理后总线推出了暂行交互方案
     - 还未进行多连测试
     
 5. 第四阶段测试
