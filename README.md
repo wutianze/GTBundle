@@ -4,8 +4,9 @@
 注：部署的总线容器需要公网ip，java client和总线容器的交互可以不走公网。
 
 ## Docker usage
-`docker pull sauronwu/gtbundle:v1.3 # 如果是arm版本则docker pull sauronwu/gtbundle_arm:v1.0`  
-`docker run -it -p 5100:5100 -p 8000:8000 sauronwu/gtbundle:v1.3 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作，具体端口映射请根据自身需求来定，但请保持容器和host的端口一致。
+`docker pull sauronwu/gtbundle:v2.1 # 如果是arm版本则docker pull sauronwu/gtbundle_arm:v1.0`  
+`docker run -it -p 5100:5100 -p 8000:8000 sauronwu/gtbundle:v2.1 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作，具体端口映射请根据自身需求来定，但请保持容器和host的端口一致。  
+最新的x86容器版本为v2.1，采用了更新的fastdds:v2.1.0版本，推荐使用（已测试通过）。如果出现问题，请使用v1.3。
 
 ## init（凡是使用docker容器的都需要进行这一步）
 `cd home/GTBundle`  
