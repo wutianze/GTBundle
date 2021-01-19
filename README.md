@@ -5,7 +5,7 @@
 
 ## Docker usage
 `docker pull sauronwu/gtbundle:v1.3 # 如果是arm版本则docker pull sauronwu/gtbundle_arm:v1.0`  
-`docker run -it -p 5100:5100 -p 8000:8000 sauronwu/gtbundle:v1.2 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作，具体端口映射请根据自身需求来定，但请保持容器和host的端口一致。
+`docker run -it -p 5100:5100 -p 8000:8000 sauronwu/gtbundle:v1.3 /bin/bash` # 此时会进入容器的bash，请进行下文的init和run操作，具体端口映射请根据自身需求来定，但请保持容器和host的端口一致。
 
 ## init（凡是使用docker容器的都需要进行这一步）
 `cd home/GTBundle`  
@@ -46,7 +46,7 @@
   4. 推荐使用ubuntu >= 18.04
   5. 如果使用docker容器，则只需要对应选择x86或arm即可
 
-## 测试（上一次更新2021.1.18）
+## 测试（上一次更新2021.1.19）
 1. 第一阶段测试
   - 测试目的：各个部门本地的socket可以接入总线提供的容器，实现双向的收发消息
   - 测试方式：非总线部门使用`./bundle client`来启动容器内的socket server（localhost:8000）; 如果你的实现是socket server而不是socket client，则使用`./bundle test`来临时测试，请尽快更新至socket client；如果你是控制中心，则原则上就是总线，所以使用`./bundle server`来启动容器内的
@@ -73,7 +73,7 @@
     - 总控和高通量、无线实现了公网互通
     - 目前无线在完善控制逻辑
     - 总控给出了消息交互规范文档，整理后总线推出了暂行交互方案
-    - 还未进行多连测试
+    - 还未进行多连测试(总线进行了多连以及较高负载测试)
     
 5. 第四阶段测试
   - 测试目的：最终测试，实现大屏展示、对应用的延迟保护
