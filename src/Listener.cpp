@@ -3,16 +3,15 @@
             DataReader* reader)
     {
         SampleInfo info;
-            if (reader->take_next_sample(&message_, &info) == ReturnCode_t::RETCODE_OK)
+            while(reader->take_next_sample(&message_, &info) == ReturnCode_t::RETCODE_OK)
             {
 		    //auto rec_time = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch()).count();
 		    if (info.instance_state == ALIVE)
                 {
                     samples_++;
-                    std::cout << "listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
+                    //std::cout << "listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
 		    for(auto target : targets_){
 		    as_->Send(target,message_.com());// com is the ControllerJSON
-		    
 		    }
 		}
             }
@@ -84,15 +83,15 @@
             DataReader* reader)
     {
         SampleInfo info;
-            if (reader->take_next_sample(&message_, &info) == ReturnCode_t::RETCODE_OK)
+            while(reader->take_next_sample(&message_, &info) == ReturnCode_t::RETCODE_OK)
             {
 		    //auto rec_time = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch()).count();
 		    if (info.instance_state == ALIVE)
                 {
                     samples_++;
-                    std::cout << "listener receive from dds client seq: "<< message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
+                    //std::cout << "listener receive from dds client seq: "<< message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
 		    as_->Send(target_,message_.com());// com is the GeneratorJSON 
-		std::cout<<"as_ send finish\n";
+		//std::cout<<"as_ send finish\n";
 		    		}
             }
     }

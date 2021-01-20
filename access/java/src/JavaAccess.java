@@ -114,8 +114,13 @@ public boolean send(String jsonString){
 	try{
 	byte[] tmp = jsonString.getBytes("UTF-8");
       	System.out.println("send bytes len:"+tmp.length);
-         out.write(int2Bytes(tmp.length));
-         out.write(tmp);
+        byte[] tmpL = int2Bytes(tmp.length);
+	byte[] addAll = new byte[tmp.length + tmpL.length];
+       System.arraycopy(tmpL,0,addAll,0,tmpL.length);	
+       System.arraycopy(tmp,0,addAll,tmpL.length,tmp.length);	
+	//out.write(int2Bytes(tmp.length));
+         //out.write(tmp);
+         out.write(addAll);
 	 return true;
 }catch(Exception e){
 e.printStackTrace();
