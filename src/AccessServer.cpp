@@ -58,11 +58,19 @@ bool AccessServer::Send(int index, string to_send){
 	int tss = to_send.size();
 	    cout<<"AccessServer::Send, to_send size:"<<tss<<endl;
 	    memcpy(to_send_size,&tss,sizeof(int));
-	    if(send(conn, to_send_size, sizeof(int), 0) == -1){
+	    //string intString(4,'a');
+	    string intString;
+	    for(int i=0;i<4;i++){
+	    //intString[i] = to_send_size[i];
+	    intString.push_back(to_send_size[i]);
+	    }
+	    string toSend = intString+to_send;
+	    //cout<<"intString.size():"<<intString.size()<<",sizeof int:"<<sizeof(int)<<",to_send.size():"<<to_send.size()<<",toSend size:"<<toSend.size()<<",tss:"<<tss<<endl;
+	    /*if(send(conn, to_send_size, sizeof(int), 0) == -1){
 	    cout<<"AccessServer send fail"<<endl;
 	    return false;
-	    }
-	    if(send(conn, to_send.c_str(), to_send.size(), 0) ==-1){
+	    }*/
+	    if(send(conn, toSend.c_str(), toSend.size(), 0) ==-1){
 	    cout<<"AccessServer send fail"<<endl;
 	    return false;
 	    }
