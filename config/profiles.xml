@@ -76,8 +76,8 @@
 						</locator>
 						<locator>
 							<tcpv4>
-								<address>199.19.226.47</address>
-								<physical_port>5100</physical_port>
+								<address>152.136.134.100</address>
+								<physical_port>5101</physical_port>
 							</tcpv4>
 						</locator>
 					</initialPeersList>

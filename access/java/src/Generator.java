@@ -42,8 +42,8 @@ sharedStatus.set(1);
 	countNow++;
 Thread.sleep(interval);	
 }
-//jA.send("exit");
-//jA.disconnect();
+jA.send("exit");
+jA.disconnect();
 readerT.join();
 
 System.out.println("java Client in Generator side stop");

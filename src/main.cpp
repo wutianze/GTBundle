@@ -11,9 +11,9 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include "rapidjson/document.h"
+/*#include "rapidjson/document.h"
 #include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
+#include "rapidjson/stringbuffer.h"*/
 #include<thread>
 #include<atomic>
 #include"AccessServer.h"
@@ -52,18 +52,22 @@ for(int ln=0;ln<LINKNUM;ln++){
 		}
 		wls[ln]=new GeneralWriterListener();
 		sercws[ln] = new SerCliWriter("SerCli"+to_string(ln),"SerCli");
-		if(!c->addWriter("serclipub","serclipub"+to_string(ln)+"_datawriter",wls[ln],sercws[ln])){
+		if(!c->addWriter("serclipub"+to_string(ln),"serclipub"+to_string(ln)+"_datawriter",wls[ln],sercws[ln])){
 		return -1;
 		}
 		rls[ln]=new CliSerReaderListener();
 		ass[ln]=new AccessServer(8000+ln);
+		rts[ln] = thread([&ass,&rls,&c,ln,onMessage]{
 		int to_send_conn = ass[ln]->Accept();
 		rls[ln]->setSocketServer(ass[ln]);
 		rls[ln]->setSocketTarget(to_send_conn);
-		if(!c->addReader("clisersub","CliSer"+to_string(ln),"CliSer","clisersub"+to_string(ln)+"_datareader",rls[ln])){
+		if(!c->addReader("clisersub"+to_string(ln),"CliSer"+to_string(ln),"CliSer","clisersub"+to_string(ln)+"_datareader",rls[ln])){
 		return -1;
 		}
-		rts[ln] = ass[ln]->CreateReader(to_send_conn,c->getWriter("serclipub"),onMessage);
+		thread tmpThread = ass[ln]->CreateReader(to_send_conn,c->getWriter("serclipub"+to_string(ln)),onMessage);	
+		tmpThread.join();
+				});
+		
 }
 for(int ln=0;ln<LINKNUM;ln++)		
 {

@@ -94,7 +94,10 @@ bool Bundle::addTopic(string topicName, string typeName){
 		cout<<"addTopic Fail: create_topic: "<<topicName<<" fail"<<endl;
 		return false;
 	}
-	topics_.insert(pair<string,Topic*>(topicName,tmp));
+	pair<map<string, Topic*>::iterator,bool>ret = topics_.insert(pair<string,Topic*>(topicName,tmp));
+	if(!ret.second){
+	cout<<"addTopic Warning: may insert repeated key\n";
+	}
 	return true;	
 }
 bool Bundle::addWriter(string name, string config, DataWriterListener* listener,BunWriter* bunwriter){
@@ -115,7 +118,10 @@ bool Bundle::addWriter(string name, string config, DataWriterListener* listener,
 		return false;
 	}
 	bunwriter->writer_listener_ = listener;
-	writers_.insert(pair<string, BunWriter*>(name,bunwriter));
+	pair<map<string, BunWriter*>::iterator,bool>ret = writers_.insert(pair<string, BunWriter*>(name,bunwriter));
+	if(!ret.second){
+		cout<<"addWriter Warning: may insert repeated key\n";
+	}
 	return true;
 }
 bool Bundle::addReader(string name, string topicName, string typeName, string config, DataReaderListener* listener){
@@ -137,7 +143,10 @@ bool Bundle::addReader(string name, string topicName, string typeName, string co
 		return false;
 	}
 	tmp->reader_listener_ = listener;
-	readers_.insert(pair<string, BunReader*>(name,tmp));
+	pair<map<string,BunReader*>::iterator,bool>ret = readers_.insert(pair<string, BunReader*>(name,tmp));
+	if(!ret.second){
+		cout<<"addReader Warning: may insert repeated key\n";
+	}
 	return true;
 }
 BunWriter* Bundle::getWriter(string name){
