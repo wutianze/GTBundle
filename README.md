@@ -11,7 +11,7 @@
 ## init（凡是使用docker容器的都需要进行这一步）
 `cd home/GTBundle`  
 `git pull`  
-`vi script/setup_server.sh` #修改script中的setup_\*文件, 如果你是非总控侧，则修改setup_client.sh中的GLOBAL_INDEX变量，总线会给每个部门指定单独的序号；如果你是总控，修改setup_server.sh中的LINKNUM变量，指定本次实验有多少个下属部门参与，比如本次只有无线和高通量参与联调，那么该数值为2（需要你有两个java client各负责一个部门消息的收发）。
+`vi script/setup_server.sh` #修改script中的setup_\*文件, 如果你是非总控侧，则修改setup_client.sh中的GLOBAL_INDEX变量，总线会给每个部门指定单独的序号（目前暂定最终联调时骨干为0，高通量为1，接入为2）；如果你是总控，修改setup_server.sh中的LINKNUM变量，指定本次实验有多少个下属部门参与，比如本次只有无线和高通量参与联调，那么该数值为2（需要你有两个java client各负责一个部门消息的收发，另外两部门修改GLOBAL_INDEX为0和1）  
 `source script/setup_server.sh`# 如果你是非总控则改为setup_client.sh  
 `mkdir build # or clear the build dir`  
 `cd build`  
@@ -29,7 +29,7 @@
 `javac -d bin/ -classpath ./src/fastjson-1.2.74.jar ./src/*.java`  
 `cd bin # 注意在demo测试时，先启动非总控侧的java程序再启动总控侧的，总控侧的一启动就会发送一条命令要求各个部门上报数据`  
 `java -cp ../src/fastjson-1.2.74.jar: Generator 127.0.0.1 8000 1000 1000 # 在非总控侧，运行Generator来产生数据，前两个参数指定ip和端口，第3个参数指定循环次数，第4个参数指定每次循环间隔的ms数`  
-`java -cp ../src/fastjson-1.2.74.jar: Controller 127.0.0.1 8000 1000 1000 # 在总控侧，运行Controller来收消息以及发布命令，参数同上`
+`java -cp ../src/fastjson-1.2.74.jar: Controller 127.0.0.1 8000 1000 1000 # 在总控侧，运行Controller来收消息以及发布命令，参数同上，如果此时有多个socket连接，则将上面命令中8000依次改为8000,8001,8002...`
 
 ## DDS configure
 - 如果你不是总控（运行的是./bundle client）  
