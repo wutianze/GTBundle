@@ -10,9 +10,7 @@
                 {
                     samples_++;
                     //std::cout << "listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
-		    for(auto target : targets_){
-		    as_->Send(target,message_.com());// com is the ControllerJSON
-		    }
+		    as_->Send(message_.com());// com is the ControllerJSON
 		}
             }
     }
@@ -90,7 +88,7 @@
                 {
                     samples_++;
                     //std::cout << "listener receive from dds client seq: "<< message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
-		    as_->Send(target_,message_.com());// com is the GeneratorJSON 
+		    as_->Send(message_.com());// com is the GeneratorJSON 
 		//std::cout<<"as_ send finish\n";
 		    		}
             }

@@ -27,9 +27,9 @@ class AccessServer{
 private:
        	int listenfd_;
 	struct sockaddr_in addr_;
-	vector<int> conn_;
-	atomic_bool ifcon_;
+	int conn_;
 public:
+	atomic_bool ifcon_;
 	AccessServer(int port){
 // socket
     listenfd_ = socket(AF_INET, SOCK_STREAM, 0);
@@ -54,15 +54,15 @@ public:
         return;
     }
     cout<<"start listen"<<endl;
-
+ifcon_ = true;
 }
 ~AccessServer(){
 cout<<"delete AccessServer"<<endl;
 }
-int Accept();
-thread CreateReader(int,BunWriter*,void(*function)(string,BunWriter*));
-bool Send(int,string);
-bool CloseConnect(int);
+bool Accept();
+thread CreateReader(BunWriter*,void(*function)(string,BunWriter*));
+bool Send(string);
+bool CloseConnect();
 bool CloseSocket();
 };
 #endif

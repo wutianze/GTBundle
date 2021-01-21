@@ -1,11 +1,10 @@
 #include"AccessServer.h"
-int AccessServer::Accept(){
+bool AccessServer::Accept(){
 // accept
     char clientIP[INET_ADDRSTRLEN] = "";
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
    //bool exitFlag = true;
-   ifcon_ = true;
 std::cout << "...listening" << std::endl;
 int tmp_conn=-1;
 while(tmp_conn<0){        
@@ -14,17 +13,17 @@ tmp_conn = accept(listenfd_, (struct sockaddr*)&clientAddr, &clientAddrLen);
 	    //sleep(1);
 }
 cout<<"accept success"<<endl;
-conn_.push_back(tmp_conn);
+conn_ = tmp_conn;
         inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
         std::cout << "...connect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
-return conn_.size()-1;
+return true;
 }
-thread AccessServer::CreateReader(int index,BunWriter* bw, void(*function)(string,BunWriter*)){
-    int tmp_conn = conn_[index];
-	return thread([tmp_conn,function,bw]{
+thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWriter*)){
+	int tmp_conn_ = conn_;
+	return thread([tmp_conn_,function,bw]{
 	while (true) {
 	int toRec;
-	int len = recv(tmp_conn,&toRec,sizeof(toRec),0);
+	int len = recv(tmp_conn_,&toRec,sizeof(toRec),0);
 	if(len <=0){
 	cout<<"AccessServer server recv fail"<<endl;
 	break;
@@ -36,53 +35,45 @@ thread AccessServer::CreateReader(int index,BunWriter* bw, void(*function)(strin
             int bytesLeft = toRec;
 	    char* ptr = buf;
 	    while(bytesLeft>0){
-	    int len = recv(tmp_conn, ptr, bytesLeft, 0);
+	    int len = recv(tmp_conn_, ptr, bytesLeft, 0);
 	    bytesLeft-=len;
 	    ptr+=len;
 	    std::cout<<"recv len:"<<len<<std::endl;
 	    buf[toRec] = '\0';
 	    }
-		std::cout <<"rec content:"<< buf<<std::endl;
+		//std::cout <<"rec content:"<< buf<<std::endl;
 	    if (strcmp(buf, "exit") == 0) {
                 std::cout << "...disconnect " << std::endl;
-		//ifcon_ = false;
 		break;
         }
 	    function(string(buf),bw);
 }	
 		});
 }
-bool AccessServer::Send(int index, string to_send){
-    int conn = conn_[index];
+bool AccessServer::Send(string to_send){
 	char to_send_size[4];
 	int tss = to_send.size();
 	    cout<<"AccessServer::Send, to_send size:"<<tss<<endl;
 	    memcpy(to_send_size,&tss,sizeof(int));
-	    //string intString(4,'a');
 	    string intString;
 	    for(int i=0;i<4;i++){
-	    //intString[i] = to_send_size[i];
 	    intString.push_back(to_send_size[i]);
 	    }
 	    string toSend = intString+to_send;
-	    //cout<<"intString.size():"<<intString.size()<<",sizeof int:"<<sizeof(int)<<",to_send.size():"<<to_send.size()<<",toSend size:"<<toSend.size()<<",tss:"<<tss<<endl;
-	    /*if(send(conn, to_send_size, sizeof(int), 0) == -1){
-	    cout<<"AccessServer send fail"<<endl;
-	    return false;
-	    }*/
-	    if(send(conn, toSend.c_str(), toSend.size(), 0) ==-1){
+	    if(send(conn_, toSend.c_str(), toSend.size(), 0) ==-1){
 	    cout<<"AccessServer send fail"<<endl;
 	    return false;
 	    }
 return true;
 }
-bool AccessServer::CloseConnect(int index){
+bool AccessServer::CloseConnect(){
 	cout<<"CloseConnect"<<endl;
-close(conn_[index]);
+close(conn_);
 return true;
 }
 bool AccessServer::CloseSocket(){
 	cout<<"CloseSocket"<<endl;
+		ifcon_ = false;
 close(listenfd_);
 return true;
 }
