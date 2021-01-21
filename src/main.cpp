@@ -117,7 +117,8 @@ for(int ln=0;ln<LINKNUM;ln++)
 
 		ass = new AccessServer*[1];
 		ass[0] = new AccessServer(8000);
-		while(ass[0]->ifcon_){
+		//while(ass[0]->ifcon_){
+		while(true){
 		ass[0]->Accept();
 		rl->setSocketServer(ass[0]);
 		if(!c->addReader("clisub","SerCli"+GLOBAL_INDEX,"SerCli","clisub"+GLOBAL_INDEX+"_datareader",rl)){
