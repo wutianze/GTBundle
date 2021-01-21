@@ -145,7 +145,9 @@ bool Bundle::addReader(string name, string topicName, string typeName, string co
 	tmp->reader_listener_ = listener;
 	pair<map<string,BunReader*>::iterator,bool>ret = readers_.insert(pair<string, BunReader*>(name,tmp));
 	if(!ret.second){
-		cout<<"addReader Warning: may insert repeated key\n";
+		cout<<"addReader Warning: may insert repeated key, will repalce\n";
+		delete readers_[name];
+		readers_[name] = tmp;
 	}
 	return true;
 }

@@ -19,11 +19,11 @@ conn_ = tmp_conn;
 return true;
 }
 thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWriter*)){
-	int tmp_conn_ = conn_;
-	return thread([tmp_conn_,function,bw]{
-	while (true) {
-	int toRec;
-	int len = recv(tmp_conn_,&toRec,sizeof(toRec),0);
+	return thread([this,function,bw]{
+	//while (this->ifcon_) {
+	while(true){
+			int toRec;
+	int len = recv(this->conn_,&toRec,sizeof(toRec),0);
 	if(len <=0){
 	cout<<"AccessServer server recv fail"<<endl;
 	break;
@@ -35,7 +35,7 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
             int bytesLeft = toRec;
 	    char* ptr = buf;
 	    while(bytesLeft>0){
-	    int len = recv(tmp_conn_, ptr, bytesLeft, 0);
+	    int len = recv(this->conn_, ptr, bytesLeft, 0);
 	    bytesLeft-=len;
 	    ptr+=len;
 	    std::cout<<"recv len:"<<len<<std::endl;

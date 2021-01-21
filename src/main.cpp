@@ -24,7 +24,7 @@ ass[i]->CloseSocket();
 }
 }
 int main(int argc, char** argv){
-	signal(SIGINT,exit_func);
+	//signal(SIGINT,exit_func);
 	string roleS(argv[1]);
 	if(roleS == "server"){
 		LINKNUM = atoi(getenv("LINKNUM"));
@@ -62,7 +62,8 @@ for(int ln=0;ln<LINKNUM;ln++){
 		rls[ln]=new CliSerReaderListener();
 		ass[ln]=new AccessServer(8000+ln);
 		rts[ln] = thread([ass,&rls,&c,ln,onMessage]{
-		while(ass[ln]->ifcon_){
+		//while(ass[ln]->ifcon_){
+		while(true){
 				ass[ln]->Accept();
 		rls[ln]->setSocketServer(ass[ln]);
 		if(!c->addReader("clisersub"+to_string(ln),"CliSer"+to_string(ln),"CliSer","clisersub"+to_string(ln)+"_datareader",rls[ln])){
