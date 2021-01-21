@@ -90,6 +90,10 @@
 				<kind>WITH_KEY</kind>
 				<name>SerCli0</name>
 				<dataType>SerCli</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -102,6 +106,10 @@
 				<kind>WITH_KEY</kind>
 				<name>SerCli0</name>
 				<dataType>SerCli</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -114,6 +122,10 @@
 				<kind>WITH_KEY</kind>
 				<name>CliSer0</name>
 				<dataType>CliSer</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -126,6 +138,10 @@
 				<kind>WITH_KEY</kind>
 				<name>CliSer0</name>
 				<dataType>CliSer</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -139,6 +155,10 @@
 				<kind>WITH_KEY</kind>
 				<name>SerCli1</name>
 				<dataType>SerCli</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -151,6 +171,10 @@
 				<kind>WITH_KEY</kind>
 				<name>SerCli1</name>
 				<dataType>SerCli</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -163,6 +187,10 @@
 				<kind>WITH_KEY</kind>
 				<name>CliSer1</name>
 				<dataType>CliSer</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -175,6 +203,10 @@
 				<kind>WITH_KEY</kind>
 				<name>CliSer1</name>
 				<dataType>CliSer</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -188,6 +220,10 @@
 				<kind>WITH_KEY</kind>
 				<name>SerCli2</name>
 				<dataType>SerCli</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -200,6 +236,10 @@
 				<kind>WITH_KEY</kind>
 				<name>SerCli2</name>
 				<dataType>SerCli</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -212,6 +252,10 @@
 				<kind>WITH_KEY</kind>
 				<name>CliSer2</name>
 				<dataType>CliSer</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
@@ -224,6 +268,10 @@
 				<kind>WITH_KEY</kind>
 				<name>CliSer2</name>
 				<dataType>CliSer</dataType>
+				<historyQos>
+					<kind>KEEP_LAST</kind>
+					<depth>10</depth>
+				</historyQos>
 			</topic>
 			<qos>
 				<reliability>
