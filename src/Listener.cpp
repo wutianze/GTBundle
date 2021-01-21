@@ -10,9 +10,7 @@
                 {
                     samples_++;
                     //std::cout << "listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
-		    for(auto target : targets_){
-		    as_->Send(target,message_.com());// com is the ControllerJSON
-		    }
+		    as_->Send(target_,message_.com());// com is the ControllerJSON
 		}
             }
     }

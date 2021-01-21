@@ -17,7 +17,7 @@
 #include "rapidjson/stringbuffer.h"
 #include<thread>
 #include<atomic>
-#include<vector>
+#include<map>
 #include "Bundle.h"
 #include "Listener.h"
 using namespace std;
@@ -27,9 +27,9 @@ class AccessServer{
 private:
        	int listenfd_;
 	struct sockaddr_in addr_;
-	vector<int> conn_;
-	atomic_bool ifcon_;
+	map<int,int> conn_;
 public:
+	atomic_bool ifcon_;
 	AccessServer(int port){
 // socket
     listenfd_ = socket(AF_INET, SOCK_STREAM, 0);
@@ -54,12 +54,13 @@ public:
         return;
     }
     cout<<"start listen"<<endl;
+    ifcon_ = true;
 
 }
 ~AccessServer(){
 cout<<"delete AccessServer"<<endl;
 }
-int Accept();
+bool Accept(int index);
 thread CreateReader(int,BunWriter*,void(*function)(string,BunWriter*));
 bool Send(int,string);
 bool CloseConnect(int);

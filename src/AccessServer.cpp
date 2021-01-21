@@ -1,28 +1,28 @@
 #include"AccessServer.h"
-int AccessServer::Accept(){
+bool AccessServer::Accept(int index){
 // accept
     char clientIP[INET_ADDRSTRLEN] = "";
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
-   //bool exitFlag = true;
-   ifcon_ = true;
 std::cout << "...listening" << std::endl;
 int tmp_conn=-1;
 while(tmp_conn<0){        
 tmp_conn = accept(listenfd_, (struct sockaddr*)&clientAddr, &clientAddrLen);
-            //std::cout << "Error: accept" << std::endl;	
 	    //sleep(1);
 }
 cout<<"accept success"<<endl;
-conn_.push_back(tmp_conn);
+if(conn_[index] != -1){
+cout<<"Warning: AccesssServer Accept an existing index\n";
+}
+conn_[index] = tmp_conn;
         inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
         std::cout << "...connect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
-return conn_.size()-1;
+return true;
 }
 thread AccessServer::CreateReader(int index,BunWriter* bw, void(*function)(string,BunWriter*)){
-    int tmp_conn = conn_[index];
-	return thread([tmp_conn,function,bw]{
-	while (true) {
+	return thread([this,index,function,bw]{
+	int tmp_conn = this->conn_[index];
+			while (true) {
 	int toRec;
 	int len = recv(tmp_conn,&toRec,sizeof(toRec),0);
 	if(len <=0){
@@ -45,7 +45,7 @@ thread AccessServer::CreateReader(int index,BunWriter* bw, void(*function)(strin
 		std::cout <<"rec content:"<< buf<<std::endl;
 	    if (strcmp(buf, "exit") == 0) {
                 std::cout << "...disconnect " << std::endl;
-		//ifcon_ = false;
+		this->CloseConnect(index);
 		break;
         }
 	    function(string(buf),bw);
@@ -78,11 +78,17 @@ return true;
 }
 bool AccessServer::CloseConnect(int index){
 	cout<<"CloseConnect"<<endl;
+	if(conn_[index] == -1){
+	cout<<"Connection with index:"<<index<<" has been closed before\n";
+	return true;
+	}
 close(conn_[index]);
+conn_[index] = -1;
 return true;
 }
 bool AccessServer::CloseSocket(){
 	cout<<"CloseSocket"<<endl;
+ifcon_ = false;
 close(listenfd_);
 return true;
 }

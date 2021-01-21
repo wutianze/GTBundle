@@ -16,11 +16,17 @@
 #include "rapidjson/stringbuffer.h"*/
 #include<thread>
 #include<atomic>
+#include<signal.h>
 #include"AccessServer.h"
-#include"AccessClient.h"
 using namespace std;
 using namespace rapidjson;
+AccessServer* as = new AccessServer(8000);
+void exit_func(int signum){
+as->CloseSocket();
+}
+
 int main(int argc, char** argv){
+	signal(SIGINT,exit_func);
 	string roleS(argv[1]);
 	if(roleS == "server"){
 		int LINKNUM = atoi(getenv("LINKNUM"));
@@ -29,7 +35,6 @@ int main(int argc, char** argv){
 		GeneralWriterListener* wls[LINKNUM];
 		SerCliWriter* sercws[LINKNUM];
 		CliSerReaderListener* rls[LINKNUM];
-		AccessServer* ass[LINKNUM];
 		thread rts[LINKNUM];
 		auto onMessage = [](string msg,BunWriter* bw){
 			cout<<"receive from java client in Controller side:"<<msg<<endl;
@@ -56,25 +61,28 @@ for(int ln=0;ln<LINKNUM;ln++){
 		return -1;
 		}
 		rls[ln]=new CliSerReaderListener();
-		ass[ln]=new AccessServer(8000+ln);
-		rts[ln] = thread([&ass,&rls,&c,ln,onMessage]{
-		int to_send_conn = ass[ln]->Accept();
-		rls[ln]->setSocketServer(ass[ln]);
-		rls[ln]->setSocketTarget(to_send_conn);
+		rts[ln] = thread([&as,&rls,&c,ln,onMessage]{
+		while(as->ifcon_){
+		int to_send_conn = as->Accept(ln);
+		rls[ln]->setSocketServer(as);
+		rls[ln]->setSocketTarget(ln);
 		if(!c->addReader("clisersub"+to_string(ln),"CliSer"+to_string(ln),"CliSer","clisersub"+to_string(ln)+"_datareader",rls[ln])){
 		return -1;
 		}
-		thread tmpThread = ass[ln]->CreateReader(to_send_conn,c->getWriter("serclipub"+to_string(ln)),onMessage);	
+		thread tmpThread = as->CreateReader(ln,c->getWriter("serclipub"+to_string(ln)),onMessage);	
 		tmpThread.join();
+		}
 				});
 		
 }
 for(int ln=0;ln<LINKNUM;ln++)		
 {
 	rts[ln].join();
-		ass[ln]->CloseConnect(0);
+		as->CloseConnect(ln);
 }
+as->CloseSocket();
 		delete c;
+		delete as;
 
 	}else if(roleS == "client"){
 		cout<<"client here"<<endl;
@@ -86,25 +94,7 @@ for(int ln=0;ln<LINKNUM;ln++)
 		if(!c->addTopic("CliSer"+GLOBAL_INDEX,"CliSer")){
 		return -1;
 		}
-
-		GeneralWriterListener* wl=new GeneralWriterListener();
-		CliWriter* cliw = new CliWriter("CliSer"+GLOBAL_INDEX,"CliSer");
-		if(!c->addWriter("clipub","clipub"+GLOBAL_INDEX+"_datawriter",wl,cliw)){
-		return -1;
-		}
-		CliReaderListener*rl=new CliReaderListener();
-		
-		AccessServer* as=new AccessServer(8000);
-		int to_send_conn = as->Accept();
-		rl->setSocketServer(as);
-		vector<int>targets;
-		targets.push_back(to_send_conn);
-		rl->setSocketTarget(targets);
-		if(!c->addReader("clisub","SerCli"+GLOBAL_INDEX,"SerCli","clisub"+GLOBAL_INDEX+"_datareader",rl)){
-		return -1;
-		}// rl receive from dds server and transfer the msg to java client
-
-		auto onMessage = [](string msg,BunWriter* bw){
+auto onMessage = [](string msg,BunWriter* bw){
 			cout<<"received from local java client in Generator side:"<<msg<<endl;
 			CliWriter* cw =dynamic_cast<CliWriter*>(bw);
 			if(cw == nullptr){
@@ -115,14 +105,27 @@ for(int ln=0;ln<LINKNUM;ln++)
 			(cw->message_).com(msg);// content is the GeneratorJSON
 			cw->send();
 		};
+		GeneralWriterListener* wl=new GeneralWriterListener();
+		CliWriter* cliw = new CliWriter("CliSer"+GLOBAL_INDEX,"CliSer");
+		if(!c->addWriter("clipub","clipub"+GLOBAL_INDEX+"_datawriter",wl,cliw)){
+		return -1;
+		}
+		CliReaderListener*rl=new CliReaderListener();
+	while(as->ifcon_){	
+		int to_send_conn = as->Accept(0);
+		rl->setSocketServer(as);
+		rl->setSocketTarget(0);
+		if(!c->addReader("clisub","SerCli"+GLOBAL_INDEX,"SerCli","clisub"+GLOBAL_INDEX+"_datareader",rl)){
+		return -1;
+		}// rl receive from dds server and transfer the msg to java client
+		
 		thread r0 = as->CreateReader(to_send_conn,c->getWriter("clipub"),onMessage);
 		r0.join();
-
+	}
 		as->CloseConnect(0);
-		cout<<"close connect finished"<<endl;
+		as->CloseSocket();
 		delete as;
 		delete c;
-		cout<<"final delete finished"<<endl;
 	}
 	return 0;
 }

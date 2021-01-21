@@ -20,12 +20,10 @@
 #include <fstream>
 #include <map>
 #include "AccessServer.h"
-#include "AccessClient.h"
 using namespace eprosima::fastdds::dds;
 using namespace eprosima::fastdds::rtps;
 using namespace std;
 class AccessServer;
-class AccessClient;
 class CliReaderListener : public DataReaderListener
 {
 
@@ -33,8 +31,7 @@ public:
     SerCli message_;
     atomic_int samples_;
     AccessServer* as_;
-    //AccessClient* ac_;
-vector<int>targets_;
+    int target_;
 
     CliReaderListener()
     : DataReaderListener()
@@ -50,11 +47,8 @@ vector<int>targets_;
     void setSocketServer(AccessServer* as){
     as_ = as;
     }
-    /*void setSocketClient(AccessClient* ac){
-    ac_ = ac;
-    }*/
-    void setSocketTarget(vector<int>& targets){
-    targets_.assign(targets.begin(),targets.end());
+    void setSocketTarget(int target){
+    target_ = target;
     }
      void on_data_available(
             DataReader* reader);
@@ -146,6 +140,8 @@ class GeneralWriterListener : public DataWriterListener
 {
 public:
 std::atomic_int matched_;
+    AccessServer* as_;
+    int target_;
     GeneralWriterListener()
     : DataWriterListener()
     {
@@ -156,6 +152,12 @@ std::atomic_int matched_;
     {
 	    cout<<"delete GeneralWriterLister"<<endl;
     };
+void setSocketServer(AccessServer* as){
+    as_ = as;
+    }
+    void setSocketTarget(int target){
+    target_ = target;
+    }
 
      void on_publication_matched(
             DataWriter* writer,
