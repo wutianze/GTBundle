@@ -131,6 +131,11 @@ class GeneralWriterListener : public DataWriterListener
 {
 public:
 std::atomic_int matched_;
+    AccessServer* as_;
+void setSocketServer(AccessServer* as){
+    as_ = as;
+    }
+
     GeneralWriterListener()
     : DataWriterListener()
     {

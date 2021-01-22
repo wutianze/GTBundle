@@ -33,7 +33,7 @@ int rec_size=0;
 	 byte[] bytes = new byte[rec_size];
     this.jA.in.readFully(bytes);
     String content = new String(bytes, 0, rec_size,"UTF-8");
-      System.out.println("respond content:"+content);
+      //System.out.println("respond content:"+content);
 	this.rrun.onMessage(content,this.sharedStatus);
 }
 catch(Exception e)

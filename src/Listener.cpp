@@ -23,10 +23,12 @@
         if (info.current_count_change == 1)
         {
             std::cout << "Matched a remote DataWriter" << std::endl;
+	    as_->Send("Matched a Publisher");
         }
         else if (info.current_count_change == -1)
         {
             std::cout << "Unmatched a remote DataWriter" << std::endl;
+	    as_->Send("Unmatched a Publisher");
         }
     }
 
@@ -102,10 +104,12 @@
         if (info.current_count_change == 1)
         {
             std::cout << "Matched a remote DataWriter" << std::endl;
+	    as_->Send("Matched a Publisher");
         }
         else if (info.current_count_change == -1)
         {
             std::cout << "Unmatched a remote DataWriter" << std::endl;
+	    as_->Send("Unmatched a Publisher");
         }
     }
 
@@ -166,11 +170,13 @@
         {
             matched_ = info.total_count;
             std::cout << "Matched a remote Subscriber for one of our Topics" << std::endl;
+	    as_->Send("Matched a Subscriber");
         }
         else if (info.current_count_change == -1)
         {
             matched_ = info.total_count;
             std::cout << "Unmatched a remote Subscriber" << std::endl;
+	    as_->Send("Unmatched a Subscriber");
         }
     }
 
