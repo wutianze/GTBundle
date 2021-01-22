@@ -23,12 +23,12 @@
         if (info.current_count_change == 1)
         {
             std::cout << "Matched a remote DataWriter" << std::endl;
-	    as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"matched\"}");
+	    //as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"matched\"}");
         }
         else if (info.current_count_change == -1)
         {
             std::cout << "Unmatched a remote DataWriter" << std::endl;
-	    as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"unmatched\"}");
+	    //as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"unmatched\"}");
         }
     }
 
@@ -104,12 +104,12 @@
         if (info.current_count_change == 1)
         {
             std::cout << "Matched a remote DataWriter" << std::endl;
-	    as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"matched\"}");
+	    //as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"matched\"}");
         }
         else if (info.current_count_change == -1)
         {
             std::cout << "Unmatched a remote DataWriter" << std::endl;
-	    as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"unmatched\"}");
+	    //as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"unmatched\"}");
         }
     }
 
@@ -170,13 +170,13 @@
         {
             matched_ = info.total_count;
             std::cout << "Matched a remote Subscriber for one of our Topics" << std::endl;
-	    as_->Send("{\"msgType\":\"bundle_subscriber\",\"action\":\"matched\"}");
+	    //as_->Send("{\"msgType\":\"bundle_subscriber\",\"action\":\"matched\"}");
         }
         else if (info.current_count_change == -1)
         {
             matched_ = info.total_count;
             std::cout << "Unmatched a remote Subscriber" << std::endl;
-	    as_->Send("{\"msgType\":\"bundle_subscriber\",\"action\":\"unmatched\"}");
+	    //as_->Send("{\"msgType\":\"bundle_subscriber\",\"action\":\"unmatched\"}");
         }
     }
 

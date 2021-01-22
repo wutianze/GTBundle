@@ -17,11 +17,9 @@ public class Generator
 Thread readerT = jA.createReader((String msg,Status sS)->{
 System.out.println("receive controller msg:"+msg);
 ControllerJSON cj = JSON.parseObject(msg,ControllerJSON.class);
-if(sS == null){
-System.out.println("sS null"+msg);
-}
 if(cj == null){
-System.out.println("cj null"+msg);
+System.out.println("cj null"+msg+" ,may receive matched msg");
+return;
 }
 if((cj.getContent()).equals("report"))
 {

@@ -18,6 +18,10 @@ public class Controller
 Thread readerT = jA.createReader((String msg,Status sS)->{
 System.out.println("receive generator msg:"+msg);
 GeneratorJSON gj = JSON.parseObject(msg,GeneratorJSON.class);
+if(gj == null){
+System.out.println("receive generator msg null, may because receive matched msg");
+return;
+}
 if(gj.getDelay()>10){
 sS.set(2);//start control
 System.out.println("control trigger");
