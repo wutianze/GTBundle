@@ -16,6 +16,7 @@ cout<<"accept success"<<endl;
 conn_ = tmp_conn;
         inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
         std::cout << "...connect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
+	ifcon_ = true;
 return true;
 }
 thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWriter*)){
@@ -26,6 +27,7 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 	int len = recv(this->conn_,&toRec,sizeof(toRec),0);
 	if(len <=0){
 	cout<<"AccessServer server recv fail"<<endl;
+	this->CloseConnect();
 	break;
 	}
 	cout<<"recv int:"<<toRec<<endl;
@@ -44,6 +46,8 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 		//std::cout <<"rec content:"<< buf<<std::endl;
 	    if (strcmp(buf, "exit") == 0) {
                 std::cout << "...disconnect " << std::endl;
+
+	this->CloseConnect();
 		break;
         }
 	    function(string(buf),bw);
@@ -60,6 +64,9 @@ bool AccessServer::Send(string to_send){
 	    intString.push_back(to_send_size[i]);
 	    }
 	    string toSend = intString+to_send;
+	    while(!ifcon_){
+	    sleep(10);
+	    }
 	    if(send(conn_, toSend.c_str(), toSend.size(), 0) ==-1){
 	    cout<<"AccessServer send fail"<<endl;
 	    return false;
@@ -68,7 +75,9 @@ return true;
 }
 bool AccessServer::CloseConnect(){
 	cout<<"CloseConnect"<<endl;
-close(conn_);
+ifcon_ = false;
+	close(conn_);
+
 return true;
 }
 bool AccessServer::CloseSocket(){

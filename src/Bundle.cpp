@@ -12,7 +12,10 @@ bool CliWriter::send(){
 	return false;
 	}
 	if(tmp->matched_>0){
-writer_->write(&message_);
+if(!writer_->write(&message_)){
+cout<<"CliWriter send fail\n";
+return false;
+}
 return true;
 	}
 return false;
@@ -24,7 +27,10 @@ bool SerCliWriter::send(){
 	return false;
 	}
 	if(tmp->matched_>0){
-writer_->write(&message_);
+if(!writer_->write(&message_)){
+cout<<"SerCliWriter send fail\n";
+return false;
+}
 return true;
 	}
 return false;
