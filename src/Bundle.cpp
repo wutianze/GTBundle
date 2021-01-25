@@ -146,7 +146,11 @@ bool Bundle::addReader(string name, string topicName, string typeName, string co
 	pair<map<string,BunReader*>::iterator,bool>ret = readers_.insert(pair<string, BunReader*>(name,tmp));
 	if(!ret.second){
 		cout<<"addReader Warning: may insert repeated key, will repalce\n";
-		delete readers_[name];
+		if(subscriber_->delete_datareader((readers_[name])->reader_)!=ReturnCode_t::RETCODE_OK){
+		cout<<"delete old dataReader fail\n";
+		return false;
+		}
+		//delete readers_[name];//may segmentation fault
 		readers_[name] = tmp;
 	}
 	return true;

@@ -38,6 +38,7 @@ class BunReader{
 BunReader(string tn, string tyn):reader_(nullptr),topicName_(tn),typeName_(tyn){};
 virtual ~BunReader(){
 cout<<"delete BunReader"<<endl;
+delete reader_listener_;
 }
 };
 class BunWriter{
@@ -50,6 +51,7 @@ class BunWriter{
     virtual bool send();
     virtual ~BunWriter(){
     cout<<"delete BunWriter"<<endl;
+    delete writer_listener_;
     };
     BunWriter(string tn, string tyn):writer_(nullptr),topicName_(tn),typeName_(tyn){};
 };

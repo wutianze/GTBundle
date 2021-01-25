@@ -39,14 +39,15 @@ int rec_size=0;
 catch(Exception e)
       {
          e.printStackTrace();
-      System.out.println("reader exception,try reconnecting");
+      /*System.out.println("reader exception,try reconnecting");
 if(this.jA.reconnect(jA.serverName,jA.port)){
       System.out.println("reconnecting success");
       continue;
 }else{
       System.out.println("reconnecting fail, exit");
 	 return;
-}
+}*/
+	 break;
       }
 	}
 }
