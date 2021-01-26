@@ -32,8 +32,9 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 	}
 	cout<<"recv int:"<<toRec<<endl;
 	if(toRec > 512){
-	cout<<"Warning: may receive a wrong string length, ignore this msg\n";
-	continue;
+	cout<<"Warning: may receive a wrong string length, CloseConnect\n";
+	this->CloseConnect();
+	break;
 	}
 
 	        char buf[toRec+1];
@@ -42,6 +43,12 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 	    char* ptr = buf;
 	    while(bytesLeft>0){
 	    int len = recv(this->conn_, ptr, bytesLeft, 0);
+	    if(len<=0){
+	 cout<<"AccessServer server recv fail"<<endl;
+	this->CloseConnect();
+	break;
+   
+	    }
 	    bytesLeft-=len;
 	    ptr+=len;
 	    std::cout<<"recv len:"<<len<<std::endl;
