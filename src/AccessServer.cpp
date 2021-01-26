@@ -31,6 +31,10 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 	break;
 	}
 	cout<<"recv int:"<<toRec<<endl;
+	if(toRec > 512){
+	cout<<"Warning: may receive a wrong string length, ignore this msg\n";
+	continue;
+	}
 
 	        char buf[toRec+1];
             memset(buf, 0, sizeof(buf));
