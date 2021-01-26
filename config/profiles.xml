@@ -54,6 +54,13 @@
 							</tcpv4>
 						</locator>
 					</initialPeersList>
+					<readerHistoryMemoryPolicy>PREALLOCATED_WITH_REALLOC</readerHistoryMemoryPolicy>
+
+    <readerPayloadSize>512</readerPayloadSize>
+
+    <writerHistoryMemoryPolicy>PREALLOCATED_WITH_REALLOC</writerHistoryMemoryPolicy>
+
+    <writerPayloadSize>512</writerPayloadSize>
 				</builtin>
 			</rtps>
 		</participant>
@@ -81,6 +88,13 @@
 							</tcpv4>
 						</locator>
 					</initialPeersList>
+					<readerHistoryMemoryPolicy>PREALLOCATED_WITH_REALLOC</readerHistoryMemoryPolicy>
+
+    <readerPayloadSize>512</readerPayloadSize>
+
+    <writerHistoryMemoryPolicy>PREALLOCATED_WITH_REALLOC</writerHistoryMemoryPolicy>
+
+    <writerPayloadSize>512</writerPayloadSize>
 				</builtin>
 			</rtps>
 		</participant>
