@@ -34,9 +34,9 @@ using namespace eprosima::fastcdr::exception;
 
 SerCli::SerCli()
 {
-    // m_seq com.eprosima.idl.parser.typecode.PrimitiveTypeCode@2b2948e2
+    // m_seq com.eprosima.idl.parser.typecode.PrimitiveTypeCode@491cc5c9
     m_seq = 0;
-    // m_com com.eprosima.idl.parser.typecode.StringTypeCode@57536d79
+    // m_com com.eprosima.idl.parser.typecode.StringTypeCode@462d5aee
     m_com ="";
 
 }
@@ -85,7 +85,7 @@ size_t SerCli::getMaxCdrSerializedSize(size_t current_alignment)
     current_alignment += 8 + eprosima::fastcdr::Cdr::alignment(current_alignment, 8);
 
 
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + 255 + 1;
+    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + 512 + 1;
 
 
     return current_alignment - initial_alignment;

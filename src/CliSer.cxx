@@ -34,9 +34,9 @@ using namespace eprosima::fastcdr::exception;
 
 CliSer::CliSer()
 {
-    // m_seq com.eprosima.idl.parser.typecode.PrimitiveTypeCode@6121c9d6
+    // m_seq com.eprosima.idl.parser.typecode.PrimitiveTypeCode@74ad1f1f
     m_seq = 0;
-    // m_com com.eprosima.idl.parser.typecode.StringTypeCode@eafc191
+    // m_com com.eprosima.idl.parser.typecode.StringTypeCode@69b0fd6f
     m_com ="";
 
 }
@@ -85,7 +85,7 @@ size_t CliSer::getMaxCdrSerializedSize(size_t current_alignment)
     current_alignment += 8 + eprosima::fastcdr::Cdr::alignment(current_alignment, 8);
 
 
-    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + 255 + 1;
+    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + 512 + 1;
 
 
     return current_alignment - initial_alignment;

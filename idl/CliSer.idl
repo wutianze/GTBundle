@@ -1,5 +1,5 @@
 struct CliSer
 {
     uint64 seq;
-    string com;
+    string<512> com;
 };
