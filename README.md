@@ -47,7 +47,7 @@
   4. 推荐使用ubuntu >= 18.04
   5. 如果使用docker容器，则只需要对应选择x86或arm即可
 
-## 测试（上一次更新2021.1.19）
+## 测试（上一次更新2021.1.27）
 1. 第一阶段测试
   - 测试目的：各个部门本地的socket可以接入总线提供的容器，实现双向的收发消息
   - 测试方式：非总线部门使用`./bundle client`来启动容器内的socket server（localhost:8000）; 如果你的实现是socket server而不是socket client，则使用`./bundle test`来临时测试，请尽快更新至socket client；如果你是控制中心，则原则上就是总线，所以使用`./bundle server`来启动容器内的
