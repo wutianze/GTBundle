@@ -24,17 +24,16 @@ return;
 }
 if(gj.getDelay()>10){
 sS.set(2);//start control
-System.out.println("control trigger");
+System.out.println("delay > 10, control trigger");
 }
 },sharedStatus);
 	long currentTime=System.currentTimeMillis();
 //start reporting
-jA.send("{\"id\":\"id0\",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10,\"content\":\"report\"}");
+jA.send("{\"id\":\"id0\",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":-1,\"content\":\"report\"}");
 int countNow = 0;
 while(countNow<count){
 	currentTime=System.currentTimeMillis();
 	if(sharedStatus.check()==2){
-System.out.println("send control msg");
 jA.send("{\"id\":\"id0\",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10,\"content\":\"control\"}");
 sharedStatus.set(1);
 	}

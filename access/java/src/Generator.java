@@ -29,12 +29,15 @@ if((cj.getContent()).equals("report"))
 }
 },sharedStatus);
 int countNow = 0;
+double simDelay = 1.0;
 while(countNow<count){
 	long currentTime=System.currentTimeMillis();
 	if(sharedStatus.check() == 1){
-jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"tdxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxestingxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
+		simDelay = simDelay + 1.0;
+jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":"+String.valueOf(simDelay)+",\"content\":\"reporting log\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
 	}else if(sharedStatus.check() == 2){
-jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\\\"testing\\\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
+jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"control request received\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
+simDelay = simDelay/2.0;
 sharedStatus.set(1);
 	}
 	countNow++;
