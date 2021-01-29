@@ -9,9 +9,9 @@
 		    if (info.instance_state == ALIVE)
                 {
                     samples_++;
-                    //std::cout << "listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
+                    //logUpdate("listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com(),Nor);
 		    if(!as_->Send(message_.com())){
-		    cout<<"socket Send Fail\n";
+		    logUpdate("===> socket client fail",Err);
 		    }// com is the ControllerJSON
 		}
             }
@@ -24,12 +24,12 @@
         (void)reader;
         if (info.current_count_change == 1)
         {
-            std::cout << "Matched a remote DataWriter" << std::endl;
+            logUpdate("Matched a remote DataWriter" ,Nor);
 	    //as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"matched\"}");
         }
         else if (info.current_count_change == -1)
         {
-            std::cout << "Unmatched a remote DataWriter" << std::endl;
+            logUpdate("Unmatched a remote DataWriter" ,Nor);
 	    //as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"unmatched\"}");
         }
     }
@@ -39,7 +39,7 @@
             const eprosima::fastrtps::RequestedDeadlineMissedStatus& info)
     {
         (void)reader, (void)info;
-        std::cout << "Some data was not received on time" << std::endl;
+        logUpdate("Some data was not received on time" ,Nor);
     }
 
      void CliReaderListener::on_liveliness_changed(
@@ -49,11 +49,11 @@
         (void)reader;
         if (info.alive_count_change == 1)
         {
-            std::cout << "A matched DataWriter has become active" << std::endl;
+            logUpdate("A matched DataWriter has become active" ,Nor);
         }
         else if (info.not_alive_count_change == 1)
         {
-            std::cout << "A matched DataWriter has become inactive" << std::endl;
+            logUpdate("A matched DataWriter has become inactive" ,Nor);
         }
     }
 
@@ -62,15 +62,14 @@
             const eprosima::fastrtps::SampleRejectedStatus& info)
     {
         (void)reader, (void)info;
-        std::cout << "A received data sample was rejected" << std::endl;
+        logUpdate("A received data sample was rejected" ,Nor);
     }
 
      void CliReaderListener::on_requested_incompatible_qos(
             DataReader* /*reader*/,
             const RequestedIncompatibleQosStatus& info)
     {
-        std::cout << "Found a remote Topic with incompatible QoS (QoS ID: " << info.last_policy_id <<
-                ")" <<std::endl;
+        logUpdate("Found a remote Topic with incompatible QoS (QoS ID: " +to_string(info.last_policy_id)+")",Nor);
     }
 
      void CliReaderListener::on_sample_lost(
@@ -78,7 +77,7 @@
             const SampleLostStatus& info)
     {
         (void)reader, (void)info;
-        std::cout << "A data sample was lost and will not be received" << std::endl;
+        logUpdate("A data sample was lost and will not be received" ,War);
     }
 
      void CliSerReaderListener::on_data_available(
@@ -91,9 +90,8 @@
 		    if (info.instance_state == ALIVE)
                 {
                     samples_++;
-                    //std::cout << "listener receive from dds client seq: "<< message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com()<<std::endl;
 		    if(!as_->Send(message_.com())){
-		    cout<<"socket Send fail\n";
+		    logUpdate("===> socket client fail",Err);
 		    }// com is the GeneratorJSON 
 		    		}
             }
@@ -106,12 +104,12 @@
         (void)reader;
         if (info.current_count_change == 1)
         {
-            std::cout << "Matched a remote DataWriter" << std::endl;
+            logUpdate("Matched a remote DataWriter" ,Nor);
 	    //as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"matched\"}");
         }
         else if (info.current_count_change == -1)
         {
-            std::cout << "Unmatched a remote DataWriter" << std::endl;
+            logUpdate("Unmatched a remote DataWriter" ,Nor);
 	    //as_->Send("{\"msgType\":\"bundle_publisher\",\"action\":\"unmatched\"}");
         }
     }
@@ -121,7 +119,7 @@
             const eprosima::fastrtps::RequestedDeadlineMissedStatus& info)
     {
         (void)reader, (void)info;
-        std::cout << "Some data was not received on time" << std::endl;
+        logUpdate("Some data was not received on time" ,Nor);
     }
 
      void CliSerReaderListener::on_liveliness_changed(
@@ -131,11 +129,11 @@
         (void)reader;
         if (info.alive_count_change == 1)
         {
-            std::cout << "A matched DataWriter has become active" << std::endl;
+            logUpdate("A matched DataWriter has become active" ,Nor);
         }
         else if (info.not_alive_count_change == 1)
         {
-            std::cout << "A matched DataWriter has become inactive" << std::endl;
+            logUpdate("A matched DataWriter has become inactive" ,Nor);
         }
     }
 
@@ -144,15 +142,14 @@
             const eprosima::fastrtps::SampleRejectedStatus& info)
     {
         (void)reader, (void)info;
-        std::cout << "A received data sample was rejected" << std::endl;
+        logUpdate("A received data sample was rejected" ,Nor);
     }
 
      void CliSerReaderListener::on_requested_incompatible_qos(
             DataReader*,
             const RequestedIncompatibleQosStatus& info)
     {
-        std::cout << "Found a remote Topic with incompatible QoS (QoS ID: " << info.last_policy_id <<
-                ")" <<std::endl;
+        logUpdate("Found a remote Topic with incompatible QoS (QoS ID: "+to_string(info.last_policy_id)+")",Nor);
     }
 
      void CliSerReaderListener::on_sample_lost(
@@ -160,7 +157,7 @@
             const SampleLostStatus& info)
     {
         (void)reader, (void)info;
-        std::cout << "A data sample was lost and will not be received" << std::endl;
+        logUpdate("A data sample was lost and will not be received" ,Nor);
     }
      void GeneralWriterListener::on_publication_matched(
             DataWriter* writer,
@@ -172,13 +169,13 @@
         if (info.current_count_change == 1)
         {
             matched_ = info.total_count;
-            std::cout << "Matched a remote Subscriber for one of our Topics" << std::endl;
+            logUpdate("Matched a remote Subscriber for one of our Topics" ,Nor);
 	    //as_->Send("{\"msgType\":\"bundle_subscriber\",\"action\":\"matched\"}");
         }
         else if (info.current_count_change == -1)
         {
             matched_ = info.total_count;
-            std::cout << "Unmatched a remote Subscriber" << std::endl;
+            logUpdate("Unmatched a remote Subscriber" ,Nor);
 	    //as_->Send("{\"msgType\":\"bundle_subscriber\",\"action\":\"unmatched\"}");
         }
     }
@@ -188,15 +185,14 @@
              const OfferedDeadlineMissedStatus& status)
     {
          (void)writer, (void)status;
-         std::cout << "Some data could not be delivered on time" << std::endl;
+         logUpdate("Some data could not be delivered on time" ,War);
     }
 
      void GeneralWriterListener::on_offered_incompatible_qos(
          DataWriter* /*writer*/,
          const OfferedIncompatibleQosStatus& status)
     {
-        std::cout << "Found a remote Topic with incompatible QoS (QoS ID: " << status.last_policy_id <<
-                ")" <<std::endl;
+        logUpdate("Found a remote Topic with incompatible QoS (QoS ID: " +to_string(status.last_policy_id)+")" ,War);
     }
 
      void GeneralWriterListener::on_liveliness_lost(
@@ -204,5 +200,5 @@
          const LivelinessLostStatus& status)
     {
         (void)writer, (void)status;
-        std::cout << "Liveliness lost. Matched Subscribers will consider us offline" << std::endl;
+        logUpdate("Liveliness lost. Matched Subscribers will consider us offline" ,War);
     }

@@ -20,6 +20,7 @@
 #include <fstream>
 #include <map>
 #include "AccessServer.h"
+#include "LogUpdate.h"
 using namespace eprosima::fastdds::dds;
 using namespace eprosima::fastdds::rtps;
 using namespace std;
@@ -40,7 +41,7 @@ public:
 
     virtual ~CliReaderListener()
     {
-	    cout<<"delete CliReaderListener"<<endl;
+	    logUpdate("delete CliReaderListener",Nor);
     };
 
     void setSocketServer(AccessServer* as){
@@ -89,13 +90,13 @@ public:
     CliSerReaderListener()
     : DataReaderListener()
     {
-	    cout<<"CliSerReaderListener created"<<endl;
+	    logUpdate("CliSerReaderListener created",Nor);
 	    samples_=0;
     };
 
     virtual ~CliSerReaderListener()
     {
-	    cout<<"delete CliSerReaderListener"<<endl;
+	    logUpdate("delete CliSerReaderListener",Nor);
     };
 void setSocketServer(AccessServer* as){
     as_ = as;
@@ -144,7 +145,7 @@ void setSocketServer(AccessServer* as){
 
     virtual ~GeneralWriterListener()
     {
-	    cout<<"delete GeneralWriterLister"<<endl;
+	    logUpdate("delete GeneralWriterLister",Nor);
     };
 
      void on_publication_matched(

@@ -20,6 +20,7 @@
 #include<vector>
 #include "Bundle.h"
 #include "Listener.h"
+#include "LogUpdate.h"
 using namespace std;
 class BunWriter;
 class CliReaderListener;
@@ -34,7 +35,7 @@ public:
 // socket
     listenfd_ = socket(AF_INET, SOCK_STREAM, 0);
     if (listenfd_ == -1) {
-        std::cout << "Error: socket" << std::endl;
+        logUpdate("socket create fail",Err);
         return;
     }
     int on = 1;
@@ -45,19 +46,19 @@ public:
     addr_.sin_port = htons(port);
     addr_.sin_addr.s_addr = INADDR_ANY;
     if (bind(listenfd_, (struct sockaddr*)&addr_, sizeof(addr_)) == -1) {
-        std::cout << "Error: bind" << std::endl;
+        logUpdate("socket bind fail",Err);
         return;
     }
     // listen
     if(listen(listenfd_, 5) == -1) {
-        std::cout << "Error: listen" << std::endl;
+        logUpdate("socket listen fail",Err);
         return;
     }
-    cout<<"start listen"<<endl;
+    logUpdate("start listen",Nor);
 ifcon_ = true;
 }
 ~AccessServer(){
-cout<<"delete AccessServer"<<endl;
+logUpdate("delete AccessServer",Nor);
 }
 bool Accept();
 thread CreateReader(BunWriter*,void(*function)(string,BunWriter*));

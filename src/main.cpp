@@ -14,6 +14,7 @@
 #include<thread>
 #include<atomic>
 #include <signal.h>
+#include "LogUpdate.h"
 #include"AccessServer.h"
 using namespace std;
 int LINKNUM=1;// 1 is for client
@@ -26,9 +27,10 @@ void exit_func(int signum){
 int main(int argc, char** argv){
 	//signal(SIGINT,exit_func);
 	string roleS(argv[1]);
+	initLog();
 	if(roleS == "server"){
 		LINKNUM = atoi(getenv("LINKNUM"));
-		cout<<"server here"<<endl;
+		//logUpdate("server here",Nor);
 		Bundle* c=new Bundle("ser_participant");
 		GeneralWriterListener* wls[LINKNUM];
 		SerCliWriter* sercws[LINKNUM];
@@ -36,14 +38,17 @@ int main(int argc, char** argv){
 		ass = new AccessServer*[LINKNUM];
 		thread rts[LINKNUM];
 		auto onMessage = [](string msg,BunWriter* bw){
-			cout<<"receive from java client in Controller side:"<<msg<<endl;
+			//logUpdate("receive from java client in Controller side:"<<msg,Nor);
+			logUpdate("Controller ===> Server Bundle",Nor);
 			SerCliWriter* scw =dynamic_cast<SerCliWriter*>(bw);
 			if(scw == nullptr){
-				cout<<"onMessage Writer transfer wrong"<<endl;
+				//logUpdate("onMessage Writer transfer wrong",Nor);
+				logUpdate("SerCliWriter class transfer fail",Err);
 				return;
 			}
 			(scw->message_).seq(1);
 			(scw->message_).com(msg);// content is the GeneratorJSON
+			logUpdate("Server Bundle ===> Client Bundle",Nor);
 			scw->send();
 		};
 
@@ -90,7 +95,7 @@ int main(int argc, char** argv){
 
 
 		}else if(roleS == "client"){
-			cout<<"client here"<<endl;
+			//logUpdate("client here",Nor);
 			string GLOBAL_INDEX = string(getenv("GLOBAL_INDEX"));
 			Bundle* c = new Bundle("cli_participant");
 			if(!c->addTopic("SerCli"+GLOBAL_INDEX,"SerCli")){
@@ -107,14 +112,16 @@ int main(int argc, char** argv){
 			}
 			CliReaderListener*rl=new CliReaderListener();
 			auto onMessage = [](string msg,BunWriter* bw){
-				cout<<"received from local java client in Generator side:"<<msg<<endl;
+				//logUpdate("received from local java client in Generator side:"<<msg,Nor);
+				logUpdate("Client ===> Client Bundle",Nor);
 				CliWriter* cw =dynamic_cast<CliWriter*>(bw);
 				if(cw == nullptr){
-					cout<<"onMessage Writer transfer wrong"<<endl;
+					logUpdate("CliWriter class transfer fail",Err);
 					return;
 				}
 				(cw->message_).seq(0);// no use currently
 				(cw->message_).com(msg);// content is the GeneratorJSON
+				logUpdate("Client Bundle ===> Server Bundle",Nor);
 				cw->send();
 			};
 

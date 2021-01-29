@@ -21,6 +21,7 @@
 #include <map>
 
 #include "Listener.h"
+#include "LogUpdate.h"
 using namespace eprosima::fastdds::dds;
 using namespace eprosima::fastdds::rtps;
 using namespace std;
@@ -37,7 +38,7 @@ class BunReader{
 
 BunReader(string tn, string tyn):reader_(nullptr),topicName_(tn),typeName_(tyn){};
 virtual ~BunReader(){
-cout<<"delete BunReader"<<endl;
+logUpdate("delete BunReader",Nor);
 delete reader_listener_;
 }
 };
@@ -50,7 +51,7 @@ class BunWriter{
     string typeName_;
     virtual bool send();
     virtual ~BunWriter(){
-    cout<<"delete BunWriter"<<endl;
+    logUpdate("delete BunWriter",Nor);
     delete writer_listener_;
     };
     BunWriter(string tn, string tyn):writer_(nullptr),topicName_(tn),typeName_(tyn){};
@@ -61,7 +62,7 @@ class CliWriter:public BunWriter{
 	CliSer message_;
 virtual bool send();
 virtual ~CliWriter(){
-    cout<<"delete CliWriter"<<endl;
+    logUpdate("delete CliWriter",Nor);
 };
 };
 class SerCliWriter:public BunWriter{
@@ -70,7 +71,7 @@ class SerCliWriter:public BunWriter{
 	SerCli message_;
 virtual bool send();
 virtual ~SerCliWriter(){
-    cout<<"delete SerCliWriter"<<endl;
+    logUpdate("delete SerCliWriter",Nor);
 };
 };
 class Bundle

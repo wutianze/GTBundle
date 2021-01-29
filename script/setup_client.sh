@@ -1,3 +1,5 @@
+IAM=CLIENT
+export IAM
 GTPATH=`pwd`
 export GTPATH
 GLOBAL_INDEX=0

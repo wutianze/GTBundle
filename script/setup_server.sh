@@ -1,3 +1,5 @@
+IAM=SERVER
+export IAM
 GTPATH=`pwd`
 export GTPATH
 LINKNUM=3

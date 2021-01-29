@@ -5,17 +5,16 @@ bool AccessServer::Accept(){
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
    //bool exitFlag = true;
-std::cout << "...listening" << std::endl;
+//std::cout << "...listening" << std::endl;
+logUpdate("waiting for socket client",Nor);
 int tmp_conn=-1;
 while(tmp_conn<0){        
 tmp_conn = accept(listenfd_, (struct sockaddr*)&clientAddr, &clientAddrLen);
-            //std::cout << "Error: accept" << std::endl;	
-	    //sleep(1);
 }
-cout<<"accept success"<<endl;
+logUpdate("accept success",Nor);
 conn_ = tmp_conn;
         inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
-        std::cout << "...connect " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
+        logUpdate("...connect "+string(clientIP)+":"+to_string(ntohs(clientAddr.sin_port)),Nor);
 	ifcon_ = true;
 return true;
 }
@@ -26,13 +25,13 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 			int toRec;
 	int len = recv(this->conn_,&toRec,sizeof(toRec),0);
 	if(len <=0){
-	cout<<"AccessServer server recv fail"<<endl;
+	logUpdate("AccessServer server recv fail",War);
 	this->CloseConnect();
 	break;
 	}
 	cout<<"recv int:"<<toRec<<endl;
 	if(toRec > 512){
-	cout<<"Warning: may receive a wrong string length, CloseConnect\n";
+	logUpdate("may receive a wrong string length, CloseConnect",War);
 	this->CloseConnect();
 	break;
 	}
@@ -44,19 +43,17 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 	    while(bytesLeft>0){
 	    int len = recv(this->conn_, ptr, bytesLeft, 0);
 	    if(len<=0){
-	 cout<<"AccessServer server recv fail"<<endl;
+	 logUpdate("AccessServer server recv fail",War);
 	this->CloseConnect();
 	break;
    
 	    }
 	    bytesLeft-=len;
 	    ptr+=len;
-	    std::cout<<"recv len:"<<len<<std::endl;
 	    buf[toRec] = '\0';
 	    }
-		//std::cout <<"rec content:"<< buf<<std::endl;
 	    if (strcmp(buf, "exit") == 0) {
-                std::cout << "...disconnect " << std::endl;
+                logUpdate("...disconnect socket",Nor);
 
 	this->CloseConnect();
 		break;
@@ -68,7 +65,7 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 bool AccessServer::Send(string to_send){
 	char to_send_size[4];
 	int tss = to_send.size();
-	    cout<<"AccessServer::Send, to_send size:"<<tss<<endl;
+	    logUpdate("Bundle ===> msg size:"+to_string(tss),Nor);
 	    memcpy(to_send_size,&tss,sizeof(int));
 	    string intString;
 	    for(int i=0;i<4;i++){
@@ -79,20 +76,20 @@ bool AccessServer::Send(string to_send){
 	    sleep(10);
 	    }
 	    if(send(conn_, toSend.c_str(), toSend.size(), 0) ==-1){
-	    cout<<"AccessServer send fail"<<endl;
+	    logUpdate("AccessServer send fail",War);
 	    return false;
 	    }
 return true;
 }
 bool AccessServer::CloseConnect(){
-	cout<<"CloseConnect"<<endl;
+	logUpdate("Close Socket Connect",Nor);
 ifcon_ = false;
 	close(conn_);
 
 return true;
 }
 bool AccessServer::CloseSocket(){
-	cout<<"CloseSocket"<<endl;
+	logUpdate("CloseSocket",Nor);
 		ifcon_ = false;
 close(listenfd_);
 return true;
