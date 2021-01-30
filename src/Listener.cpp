@@ -11,7 +11,7 @@
                     samples_++;
                     //logUpdate("listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com(),Nor);
 		    if(!as_->Send(message_.com())){
-		    logUpdate("===> socket client fail",Err);
+		    //logUpdate("===> socket client fail",Err);
 		    }// com is the ControllerJSON
 		}
             }
@@ -91,7 +91,7 @@
                 {
                     samples_++;
 		    if(!as_->Send(message_.com())){
-		    logUpdate("===> socket client fail",Err);
+		    //logUpdate("===> socket client fail",Err);
 		    }// com is the GeneratorJSON 
 		    		}
             }

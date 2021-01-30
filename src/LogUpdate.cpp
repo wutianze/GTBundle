@@ -16,10 +16,10 @@ switch(level){
 		to_log = "\r=== "+to_log+"Log: "+msg;
 		break;
 	case War:
-		to_log = "=== "+to_log+"Warning: "+msg;
+		to_log = "\n=== "+to_log+"Warning: "+msg;
 		break;
 	default:
-		to_log = "=== "+to_log+"Error: "+msg;
+		to_log = "\n=== "+to_log+"Error: "+msg;
 		break;
 }
 for(int i=to_log.size();i<70;i++){

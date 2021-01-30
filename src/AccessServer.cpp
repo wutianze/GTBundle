@@ -65,7 +65,7 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 bool AccessServer::Send(string to_send){
 	char to_send_size[4];
 	int tss = to_send.size();
-	    logUpdate("Bundle ===> msg size:"+to_string(tss),Nor);
+	    logUpdate("Msg sized: "+to_string(tss)+" Bundle ===> Socket",Nor);
 	    memcpy(to_send_size,&tss,sizeof(int));
 	    string intString;
 	    for(int i=0;i<4;i++){

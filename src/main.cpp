@@ -39,7 +39,7 @@ int main(int argc, char** argv){
 		thread rts[LINKNUM];
 		auto onMessage = [](string msg,BunWriter* bw){
 			//logUpdate("receive from java client in Controller side:"<<msg,Nor);
-			logUpdate("Controller ===> Server Bundle",Nor);
+			logUpdate("Msg sized: "+to_string(msg.size())+" Socket ===> Server Bundle",Nor);
 			SerCliWriter* scw =dynamic_cast<SerCliWriter*>(bw);
 			if(scw == nullptr){
 				//logUpdate("onMessage Writer transfer wrong",Nor);
@@ -48,7 +48,7 @@ int main(int argc, char** argv){
 			}
 			(scw->message_).seq(1);
 			(scw->message_).com(msg);// content is the GeneratorJSON
-			logUpdate("Server Bundle ===> Client Bundle",Nor);
+			logUpdate("Msg sized: "+to_string(msg.size())+" Server Bundle ===> Client Bundle",Nor);
 			scw->send();
 		};
 
@@ -113,7 +113,7 @@ int main(int argc, char** argv){
 			CliReaderListener*rl=new CliReaderListener();
 			auto onMessage = [](string msg,BunWriter* bw){
 				//logUpdate("received from local java client in Generator side:"<<msg,Nor);
-				logUpdate("Client ===> Client Bundle",Nor);
+				logUpdate("Msg sized: "+to_string(msg.size())+" Socket ===> Client Bundle",Nor);
 				CliWriter* cw =dynamic_cast<CliWriter*>(bw);
 				if(cw == nullptr){
 					logUpdate("CliWriter class transfer fail",Err);
@@ -121,7 +121,7 @@ int main(int argc, char** argv){
 				}
 				(cw->message_).seq(0);// no use currently
 				(cw->message_).com(msg);// content is the GeneratorJSON
-				logUpdate("Client Bundle ===> Server Bundle",Nor);
+				logUpdate("Msg sized: "+to_string(msg.size())+" Client Bundle ===> Server Bundle",Nor);
 				cw->send();
 			};
 
