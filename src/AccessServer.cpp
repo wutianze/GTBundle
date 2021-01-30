@@ -29,7 +29,7 @@ thread AccessServer::CreateReader(BunWriter* bw, void(*function)(string,BunWrite
 	this->CloseConnect();
 	break;
 	}
-	cout<<"recv int:"<<toRec<<endl;
+	//cout<<"recv int:"<<toRec<<endl;
 	if(toRec > 512){
 	logUpdate("may receive a wrong string length, CloseConnect",War);
 	this->CloseConnect();
