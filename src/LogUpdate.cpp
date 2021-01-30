@@ -1,5 +1,6 @@
 #include "LogUpdate.h"
 string IAM;
+//atomic<bool> new_line;
 void initLog(){
 	IAM = string(getenv("IAM"));
 	if(IAM == "CLIENT"){
@@ -7,6 +8,7 @@ void initLog(){
 	}else{
 	cout<<"==========      Server LOG      ==========\n";
 	}
+	//new_line = true;
 }
 void logUpdate(string msg, int level){
 	if(msg.size()>60)cout<<"log msg too long, will not show\n";
@@ -16,10 +18,10 @@ switch(level){
 		to_log = "\r=== "+to_log+"Log: "+msg;
 		break;
 	case War:
-		to_log = "\n=== "+to_log+"Warning: "+msg;
+		to_log = "\r\n=== "+to_log+"Warning: "+msg;
 		break;
 	default:
-		to_log = "\n=== "+to_log+"Error: "+msg;
+		to_log = "\r\n=== "+to_log+"Error: "+msg;
 		break;
 }
 for(int i=to_log.size();i<70;i++){

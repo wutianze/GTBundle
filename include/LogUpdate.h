@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <iostream>
+//#include <atomic>
 using namespace std;
 #define Nor 0
 #define War 1
