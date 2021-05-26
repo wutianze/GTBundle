@@ -21,6 +21,7 @@
 #include <map>
 #include "AccessServer.h"
 #include "LogUpdate.h"
+#include "ElasticsearchClient.h"
 using namespace eprosima::fastdds::dds;
 using namespace eprosima::fastdds::rtps;
 using namespace std;

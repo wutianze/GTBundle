@@ -146,6 +146,12 @@ int main(int argc, char** argv){
 			delete ass[0];
 			delete ass;
 			delete c;
+		}else if(roleS == "test"){
+	ElasticsearchClient ec;
+	auto des = ec.getDescription();
+cout<<"ec result:"<<des["name"].GetString()<<endl;	
+cout<<ec.addIndex("test")<<endl;
+cout<<ec.deleteIndex("test")<<endl;
 		}
 		return 0;
 		}
