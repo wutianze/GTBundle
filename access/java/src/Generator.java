@@ -3,31 +3,33 @@ import java.io.*;
 import com.alibaba.fastjson.JSON;
 public class Generator
 {
-
    public static void main(String [] args)
    {
       String serverName = args[0];
       int port = Integer.parseInt(args[1]);
+      String id="";
       Status sharedStatus = new Status(0);
       int count = Integer.parseInt(args[2]);
       int interval = Integer.parseInt(args[3]);
          JavaAccess jA = new JavaAccess(serverName,port);
       try
       {
-Thread readerT = jA.createReader((String msg,Status sS)->{
+Thread readerT = jA.createReader((String msg,Status sS,String id_)->{
 System.out.println("receive controller msg:"+msg);
 ControllerJSON cj = JSON.parseObject(msg,ControllerJSON.class);
 if(cj == null){
 System.out.println("cj null"+msg+" ,may receive matched msg");
 return;
 }
-if((cj.getContent()).equals("report"))
+/*
+if((cj.getCommand()).equals("report"))
 {
 	sS.set(1);
-}else if((cj.getContent()).equals("control")){
+}else if((cj.getCommand()).equals("control")){
 	sS.set(2);
 }
-},sharedStatus);
+*/
+},sharedStatus,id);
 int countNow = 0;
 double simDelay = 1.0;
 while(countNow<count){

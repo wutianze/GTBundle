@@ -69,7 +69,7 @@ int main(int argc, char** argv){
 			rls[ln]->setSocketServer(ass[ln]);
 			wls[ln]->setSocketServer(ass[ln]);
 
-			rts[ln] = thread([ass,&rls,&c,ln,onMessage]{
+			rts[ln] = thread([&rls,&c,ln,onMessage]{
 					//while(ass[ln]->ifcon_){
 					while(true){
 					ass[ln]->Accept();
@@ -150,8 +150,20 @@ int main(int argc, char** argv){
 	ElasticsearchClient ec;
 	auto des = ec.getDescription();
 cout<<"ec result:"<<des["name"].GetString()<<endl;	
-cout<<ec.addIndex("test")<<endl;
-cout<<ec.deleteIndex("test")<<endl;
-		}
+cout<<"delete success:"<<ec.deleteIndex("test_time");
+//string id = ec.addDoc("test","{\"id\":3}");
+ec.addIndex("test_time");
+while(true){
+	cout<<"round\n";
+Document d;
+d.Parse("{\"id\":1,\"log\":{\"cpu_usage\":100,\"cpu_allocated\":120}}");
+cout<<d["log"]["cpu_usage"].GetInt()<<endl;
+string id1 = ec.addDocWithTimestamp("test_time",d);
+cout<<id1<<endl;
+sleep(1);
+//cout<<ec.getDoc("test",id)["_source"]["id"].GetInt()<<endl;
+//cout<<ec.getDoc("test_time",id1)["_source"]["id"].GetString()<<endl;
+}		
+}
 		return 0;
 		}

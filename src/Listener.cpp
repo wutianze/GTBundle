@@ -10,9 +10,20 @@
                 {
                     samples_++;
                     //logUpdate("listener receive from dds server with seq: " << message_.seq()<< " samples:" <<samples_<<", content: "<<message_.com(),Nor);
+		    
+
 		    if(!as_->Send(message_.com())){
 		    //logUpdate("===> socket client fail",Err);
 		    }// com is the ControllerJSON
+		    
+		    Document d;
+		    d.Parse(message_.com().c_str());
+		    //elasticsearch_cli_.addDoc(d["id"].GetString(),d["log"]);
+		    elasticsearch_cli_.addDocWithTimestamp(d["id"].GetString(),d);
+		    //int cpu_usage = d["log"]["cpu_usage"].GetInt();
+		    //int cpu_allocated = d["log"]["cpu_allocated"].GetInt();
+		    //cout<<"cpu usage"<<cpu_usage<<endl;
+
 		}
             }
     }

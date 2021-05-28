@@ -2,12 +2,16 @@ import java.net.*;
 import java.io.*;
 
 interface ReaderRun{
-void onMessage(String msg, Status sS);
+void onMessage(String msg, Status sS,String id_);
 }
 class ReceiveClient implements Runnable{
 private JavaAccess jA;
 private ReaderRun rrun;
 public Status sharedStatus;
+public String id;
+public void setId(String id){
+this.id = id;
+}
 public void setJa(JavaAccess j){
 this.jA = j;
 }
@@ -34,7 +38,7 @@ int rec_size=0;
     this.jA.in.readFully(bytes);
     String content = new String(bytes, 0, rec_size,"UTF-8");
       //System.out.println("respond content:"+content);
-	this.rrun.onMessage(content,this.sharedStatus);
+	this.rrun.onMessage(content,this.sharedStatus,this.id);
 }
 catch(Exception e)
       {
@@ -129,11 +133,12 @@ return false;
 }
 }
 
-public Thread createReader(ReaderRun rR,Status s){
+public Thread createReader(ReaderRun rR,Status s,String id){
 ReceiveClient rThread = new ReceiveClient();
 rThread.setJa(this);	 
 rThread.setRrun(rR);
 rThread.setStatus(s);
+rThread.setId(id);
 	 Thread thread = new Thread(rThread);
 	 thread.start();
 	 System.out.println("new Reader created");

@@ -1,9 +1,9 @@
 class Status
 {
-	/* status id:
+	/* status:
 0: wait, do nothing
-1: reporting
-2: temp status, control msg send/receive
+1: cpu_usage > cpu_allocated
+2: cpu_usage < cpu_allocated
 */
 	private int i;
 	public Status(int i){
