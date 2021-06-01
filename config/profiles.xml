@@ -49,7 +49,7 @@
 						</locator>
 						<locator>
 							<tcpv4>
-								<address>39.101.140.145</address>
+								<address>152.136.134.100</address>
 								<physical_port>5101</physical_port>
 							</tcpv4>
 						</locator>

@@ -1,7 +1,4 @@
 public class ControllerJSON{
-/*
- * command id, see Status as an example, 0: stop & wait; 1: start report; 2: control command
- */
 	private String id;
 private String command;
 public String getId(){

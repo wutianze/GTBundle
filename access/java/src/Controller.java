@@ -6,7 +6,8 @@ public class Controller
 {
 	public static void main(String [] args)
 	{
-		int THRESHOLD = 10;
+		int THRESHOLDCLOSE = 10;
+		int THRESHOLDFAR = 100;
 		String serverName = args[0];
 		int port = Integer.parseInt(args[1]);
 		String id="";
@@ -25,12 +26,12 @@ public class Controller
 				}
 				id_ = gj.getId();
 				Log updatedLog = gj.getLog();
-				if(updatedLog.getCpuUsage()-updatedLog.getCpuAllocated()>THRESHOLD){
+				if(updatedLog.getCpuAllocated()-updatedLog.getCpuUsage()<THRESHOLDCLOSE){
 					sS.set(1);//start control
-					System.out.println("cpu usage > cpu allocated, control trigger");
-				}else if(updatedLog.getCpuUsage()-updatedLog.getCpuAllocated()<-THRESHOLD){
+					System.out.println("cpu usage is close to cpu allocated, control trigger");
+				}else if(updatedLog.getCpuAllocated()-updatedLog.getCpuUsage()>THRESHOLDFAR){
 				sS.set(2);//start control
-					System.out.println("cpu usage < cpu allocated, control trigger");
+					System.out.println("cpu usage << cpu allocated, control trigger");
 
 				}else{
 				sS.set(0);
@@ -44,10 +45,10 @@ public class Controller
 			while(countNow<count){
 				//currentTime=System.currentTimeMillis();
 				if(sharedStatus.check()==1){
-					jA.send("{\"id\":\""+id+"\",\"command\":\"\"}");
+					jA.send("{\"id\":\""+id+"\",\"command\":\"{\"cpuAllocated\":1.5}\"}");
 					sharedStatus.set(0);
 				}else if(sharedStatus.check()==2){
-				jA.send("{\"id\":\""+id+"\",\"command\":\"\"}");
+				jA.send("{\"id\":\""+id+"\",\"command\":\"{\"cpuAllocated\":0.5}\"}");
 					sharedStatus.set(0);
 				}
 				countNow++;

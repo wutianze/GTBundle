@@ -21,6 +21,7 @@ if(cj == null){
 System.out.println("cj null"+msg+" ,may receive matched msg");
 return;
 }
+System.out.println(cj.getCommand());
 /*
 if((cj.getCommand()).equals("report"))
 {
@@ -35,12 +36,9 @@ double simDelay = 1.0;
 while(countNow<count){
 	long currentTime=System.currentTimeMillis();
 	if(sharedStatus.check() == 1){
-		simDelay = simDelay + 1.0;
-jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":"+String.valueOf(simDelay)+",\"content\":\"reporting log\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
+jA.send("{\"id\":\"id0\",\"log\":\"{\"cpuUsage\":100,\"cpuAllocated\":200}\"");
 	}else if(sharedStatus.check() == 2){
-jA.send("{\"id\":\"id0\",\"seq\":"+String.valueOf(countNow)+",\"timestamp\":"+ String.valueOf(currentTime) +",\"delay\":10.0,\"content\":\"control request received\",\"status\":"+String.valueOf(sharedStatus.check())+"}");
-simDelay = simDelay/2.0;
-sharedStatus.set(1);
+jA.send("{\"id\":\"id0\",\"log\":\"{\"cpuUsage\":200,\"cpuAllocated\":100}\"");
 	}
 	countNow++;
 Thread.sleep(interval);	
