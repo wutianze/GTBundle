@@ -91,8 +91,9 @@ public:
 
     ElasticsearchClient elasticsearch_cli_;
     
-    CliSerReaderListener()
-    : DataReaderListener()
+    CliSerReaderListener(string elasticsearchAddress)
+    : DataReaderListener(),
+	elasticsearch_cli_(elasticsearchAddress)
     {
 	    logUpdate("CliSerReaderListener created",Nor);
 	    samples_=0;

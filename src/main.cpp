@@ -64,7 +64,7 @@ int main(int argc, char** argv){
 			if(!c->addWriter("serclipub"+to_string(ln),"serclipub"+to_string(ln)+"_datawriter",wls[ln],sercws[ln])){
 				return -1;
 			}
-			rls[ln]=new CliSerReaderListener();
+			rls[ln]=new CliSerReaderListener("http://172.17.0.1:9200");
 			ass[ln]=new AccessServer(8000+ln);
 			rls[ln]->setSocketServer(ass[ln]);
 			wls[ln]->setSocketServer(ass[ln]);
@@ -147,7 +147,7 @@ int main(int argc, char** argv){
 			delete ass;
 			delete c;
 		}else if(roleS == "test"){
-	ElasticsearchClient ec;
+	ElasticsearchClient ec("http://172.17.0.1:9200");
 	auto des = ec.getDescription();
 cout<<"ec result:"<<des["name"].GetString()<<endl;	
 cout<<"delete success:"<<ec.deleteIndex("test_time");
