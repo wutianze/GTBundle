@@ -33,7 +33,6 @@ public:
     SerCli message_;
     atomic_int samples_;
     AccessServer* as_;
-    ElasticsearchClient elasticsearch_cli_;
 
 
     CliReaderListener()
@@ -90,6 +89,8 @@ public:
     atomic_int samples_;
     AccessServer* as_;
 
+    ElasticsearchClient elasticsearch_cli_;
+    
     CliSerReaderListener()
     : DataReaderListener()
     {
