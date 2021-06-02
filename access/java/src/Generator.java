@@ -7,14 +7,14 @@ public class Generator
    {
       String serverName = args[0];
       int port = Integer.parseInt(args[1]);
-      String id="";
+      StringBuffer id=new StringBuffer(20);
       Status sharedStatus = new Status(0);
       int count = Integer.parseInt(args[2]);
       int interval = Integer.parseInt(args[3]);
          JavaAccess jA = new JavaAccess(serverName,port);
       try
       {
-Thread readerT = jA.createReader((String msg,Status sS,String id_)->{
+Thread readerT = jA.createReader((String msg,Status sS,StringBuffer id_)->{
 System.out.println("receive controller msg:"+msg);
 ControllerJSON cj = JSON.parseObject(msg,ControllerJSON.class);
 if(cj == null){

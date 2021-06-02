@@ -6,25 +6,27 @@ public class Controller
 {
 	public static void main(String [] args)
 	{
-		int THRESHOLDCLOSE = 10;
-		int THRESHOLDFAR = 100;
+		int THRESHOLDCLOSE = 5;
+		int THRESHOLDFAR = 5;
 		String serverName = args[0];
 		int port = Integer.parseInt(args[1]);
-		String id="";
+		StringBuffer id=new StringBuffer(20);
 		Status sharedStatus = new Status(0);
 		int count = Integer.parseInt(args[2]);
 		int interval = Integer.parseInt(args[3]);
 		JavaAccess jA = new JavaAccess(serverName,port);
 		try
 		{
-			Thread readerT = jA.createReader((String msg,Status sS,String id_)->{
+			Thread readerT = jA.createReader((String msg,Status sS,StringBuffer id_)->{
 				System.out.println("receive generator msg:"+msg);
 				GeneratorJSON gj = JSON.parseObject(msg,GeneratorJSON.class);
 				if(gj == null){
 					System.out.println("receive generator msg null, may because receive matched msg");
 					return;
 				}
-				id_ = gj.getId();
+				if(id_.toString().equals("")){
+				id_.append(gj.getId());
+				}
 				Log updatedLog = JSON.parseObject(gj.getLog(),Log.class);
 				if(updatedLog.getCpuAllocated()-updatedLog.getCpuUsage()<THRESHOLDCLOSE){
 					sS.set(1);//start control
@@ -45,10 +47,10 @@ public class Controller
 			while(countNow<count){
 				//currentTime=System.currentTimeMillis();
 				if(sharedStatus.check()==1){
-					jA.send("{\"id\":\""+id+"\",\"command\":{\"cpuAllocated\":1.5}}");
+					jA.send("{\"id\":\""+id+"\",\"command\":{\"cpuAllocated\":100}}");
 					sharedStatus.set(0);
 				}else if(sharedStatus.check()==2){
-				jA.send("{\"id\":\""+id+"\",\"command\":{\"cpuAllocated\":0.5}}");
+				jA.send("{\"id\":\""+id+"\",\"command\":{\"cpuAllocated\":50}}");
 					sharedStatus.set(0);
 				}
 				countNow++;

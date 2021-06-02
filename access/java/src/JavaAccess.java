@@ -2,14 +2,14 @@ import java.net.*;
 import java.io.*;
 
 interface ReaderRun{
-void onMessage(String msg, Status sS,String id_);
+void onMessage(String msg, Status sS,StringBuffer id_);
 }
 class ReceiveClient implements Runnable{
 private JavaAccess jA;
 private ReaderRun rrun;
 public Status sharedStatus;
-public String id;
-public void setId(String id){
+public StringBuffer id;
+public void setId(StringBuffer id){
 this.id = id;
 }
 public void setJa(JavaAccess j){
@@ -133,7 +133,7 @@ return false;
 }
 }
 
-public Thread createReader(ReaderRun rR,Status s,String id){
+public Thread createReader(ReaderRun rR,Status s,StringBuffer id){
 ReceiveClient rThread = new ReceiveClient();
 rThread.setJa(this);	 
 rThread.setRrun(rR);
