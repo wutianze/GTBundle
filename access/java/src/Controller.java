@@ -25,7 +25,7 @@ public class Controller
 					return;
 				}
 				id_ = gj.getId();
-				Log updatedLog = gj.getLog();
+				Log updatedLog = JSON.parseObject(gj.getLog(),Log.class);
 				if(updatedLog.getCpuAllocated()-updatedLog.getCpuUsage()<THRESHOLDCLOSE){
 					sS.set(1);//start control
 					System.out.println("cpu usage is close to cpu allocated, control trigger");
