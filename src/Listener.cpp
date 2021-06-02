@@ -98,10 +98,10 @@
 		    //logUpdate("===> socket client fail",Err);
 		    }// com is the GeneratorJSON 
 		    
-		    //Document d;
-		    //d.Parse(message_.com().c_str());
+		    Document d;
+		    d.Parse(message_.com().c_str());
 		    //elasticsearch_cli_.addDoc(d["id"].GetString(),d["log"]);
-		    //elasticsearch_cli_.addDocWithTimestamp(d["id"].GetString(),d);
+		    elasticsearch_cli_.addDocWithTimestamp(d["id"].GetString(),d);
 		    //int cpu_usage = d["log"]["cpu_usage"].GetInt();
 		    //int cpu_allocated = d["log"]["cpu_allocated"].GetInt();
 		    //cout<<"cpu usage"<<cpu_usage<<endl;
