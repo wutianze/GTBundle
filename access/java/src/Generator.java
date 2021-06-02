@@ -32,7 +32,7 @@ if((cj.getCommand()).equals("report"))
 */
 },sharedStatus,id);
 int countNow = 0;
-double simDelay = 1.0;
+sharedStatus.set(1);
 while(countNow<count){
 	long currentTime=System.currentTimeMillis();
 	if(sharedStatus.check() == 1){
