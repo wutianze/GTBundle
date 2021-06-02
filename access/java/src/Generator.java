@@ -36,7 +36,7 @@ sharedStatus.set(1);
 while(countNow<count){
 	long currentTime=System.currentTimeMillis();
 	if(sharedStatus.check() == 1){
-jA.send("{\"id\":\"id0\",\"log\":{\"cpuUsage\":100,\"cpuAllocated\":200}}");
+jA.send("{\"id\":\"id0\",\"log\":{\"cpuUsage\":0,\"cpuAllocated\":200}}");
 	}else if(sharedStatus.check() == 2){
 jA.send("{\"id\":\"id0\",\"log\":{\"cpuUsage\":200,\"cpuAllocated\":100}}");
 	}

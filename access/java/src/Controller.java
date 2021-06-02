@@ -45,10 +45,10 @@ public class Controller
 			while(countNow<count){
 				//currentTime=System.currentTimeMillis();
 				if(sharedStatus.check()==1){
-					jA.send("{\"id\":\""+id+"\",\"command\":\"{\"cpuAllocated\":1.5}\"}");
+					jA.send("{\"id\":\""+id+"\",\"command\":{\"cpuAllocated\":1.5}}");
 					sharedStatus.set(0);
 				}else if(sharedStatus.check()==2){
-				jA.send("{\"id\":\""+id+"\",\"command\":\"{\"cpuAllocated\":0.5}\"}");
+				jA.send("{\"id\":\""+id+"\",\"command\":{\"cpuAllocated\":0.5}}");
 					sharedStatus.set(0);
 				}
 				countNow++;
