@@ -36,9 +36,9 @@ double simDelay = 1.0;
 while(countNow<count){
 	long currentTime=System.currentTimeMillis();
 	if(sharedStatus.check() == 1){
-jA.send("{\"id\":\"id0\",\"log\":\"{\"cpuUsage\":100,\"cpuAllocated\":200}\"");
+jA.send("{\"id\":\"id0\",\"log\":\"{\"cpuUsage\":100,\"cpuAllocated\":200}\"}");
 	}else if(sharedStatus.check() == 2){
-jA.send("{\"id\":\"id0\",\"log\":\"{\"cpuUsage\":200,\"cpuAllocated\":100}\"");
+jA.send("{\"id\":\"id0\",\"log\":\"{\"cpuUsage\":200,\"cpuAllocated\":100}\"}");
 	}
 	countNow++;
 Thread.sleep(interval);	
